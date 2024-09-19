@@ -29,7 +29,7 @@ export default function Dashboard() {
                                 CS5350 Computational Geometry
                             </h5>
                             <p className="wd-dashboard-course-title">
-                                Full Stack software developer
+                                Geometry Course
                             </p>
                             <button> Go </button>
                         </div>
@@ -44,7 +44,7 @@ export default function Dashboard() {
                                 CS5150 Game AI
                             </h5>
                             <p className="wd-dashboard-course-title">
-                                Full Stack software developer
+                                Game AI Course
                             </p>
                             <button> Go </button>
                         </div>
@@ -59,7 +59,7 @@ export default function Dashboard() {
                                 CS5310 Computer Graphics
                             </h5>
                             <p className="wd-dashboard-course-title">
-                                Full Stack software developer
+                                Computer Graphics Course
                             </p>
                             <button> Go </button>
                         </div>
@@ -74,7 +74,7 @@ export default function Dashboard() {
                                 CS5010 Programming Design Paradigm
                             </h5>
                             <p className="wd-dashboard-course-title">
-                                Full Stack software developer
+                                Programming Design Paradigms Course
                             </p>
                             <button> Go </button>
                         </div>
@@ -89,7 +89,7 @@ export default function Dashboard() {
                                 CS5800 Algorithms
                             </h5>
                             <p className="wd-dashboard-course-title">
-                                Full Stack software developer
+                                Algorithms Course
                             </p>
                             <button> Go </button>
                         </div>
@@ -104,7 +104,7 @@ export default function Dashboard() {
                                 CS5700 Fundamentals of Computer Networking
                             </h5>
                             <p className="wd-dashboard-course-title">
-                                Full Stack software developer
+                                Networking Fundamentals Course
                             </p>
                             <button> Go </button>
                         </div>
