@@ -20,6 +20,96 @@ export default function Dashboard() {
                         </div>
                     </Link>
                 </div>
+                <div className="wd-dashboard-course">
+                    <Link className="wd-dashboard-course-link"
+                        to="/Kanbas/Courses/1234/Home">
+                        <img src="/images/computational.png" width={200} />
+                        <div>
+                            <h5>
+                                CS5350 Computational Geometry
+                            </h5>
+                            <p className="wd-dashboard-course-title">
+                                Full Stack software developer
+                            </p>
+                            <button> Go </button>
+                        </div>
+                    </Link>
+                </div>
+                <div className="wd-dashboard-course">
+                    <Link className="wd-dashboard-course-link"
+                        to="/Kanbas/Courses/1234/Home">
+                        <img src="/images/gameai.png" width={200} />
+                        <div>
+                            <h5>
+                                CS5150 Game AI
+                            </h5>
+                            <p className="wd-dashboard-course-title">
+                                Full Stack software developer
+                            </p>
+                            <button> Go </button>
+                        </div>
+                    </Link>
+                </div>
+                <div className="wd-dashboard-course">
+                    <Link className="wd-dashboard-course-link"
+                        to="/Kanbas/Courses/1234/Home">
+                        <img src="/images/computergraphics.png" width={200} />
+                        <div>
+                            <h5>
+                                CS5310 Computer Graphics
+                            </h5>
+                            <p className="wd-dashboard-course-title">
+                                Full Stack software developer
+                            </p>
+                            <button> Go </button>
+                        </div>
+                    </Link>
+                </div>
+                <div className="wd-dashboard-course">
+                    <Link className="wd-dashboard-course-link"
+                        to="/Kanbas/Courses/1234/Home">
+                        <img src="/images/designpatterns.jpg" width={200} />
+                        <div>
+                            <h5>
+                                CS5010 Programming Design Paradigm
+                            </h5>
+                            <p className="wd-dashboard-course-title">
+                                Full Stack software developer
+                            </p>
+                            <button> Go </button>
+                        </div>
+                    </Link>
+                </div>
+                <div className="wd-dashboard-course">
+                    <Link className="wd-dashboard-course-link"
+                        to="/Kanbas/Courses/1234/Home">
+                        <img src="/images/algorithms.jpg" width={200} />
+                        <div>
+                            <h5>
+                                CS5800 Algorithms
+                            </h5>
+                            <p className="wd-dashboard-course-title">
+                                Full Stack software developer
+                            </p>
+                            <button> Go </button>
+                        </div>
+                    </Link>
+                </div>
+                <div className="wd-dashboard-course">
+                    <Link className="wd-dashboard-course-link"
+                        to="/Kanbas/Courses/1234/Home">
+                        <img src="/images/networking.jpg" width={200} />
+                        <div>
+                            <h5>
+                                CS5700 Fundamentals of Computer Networking
+                            </h5>
+                            <p className="wd-dashboard-course-title">
+                                Full Stack software developer
+                            </p>
+                            <button> Go </button>
+                        </div>
+                    </Link>
+                </div>
                 <div className="wd-dashboard-course"> ... </div>
                 <div className="wd-dashboard-course"> ... </div>
             </div>
