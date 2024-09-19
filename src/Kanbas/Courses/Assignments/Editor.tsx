@@ -79,6 +79,16 @@ export default function AssignmentEditor() {
                         id="wd-available-until"
                         value="2024-05-20" /><br />
                 </tr>
+                <tr>
+                    <h5 id="wd-buttons">__________________________________________________________________________________________________________</h5>
+                    <button id="wd-cancel" onClick={() => alert("Cancelled")} type="button">
+                        Cancel
+                    </button>
+                    <button id="wd-save" onClick={() => alert("Save")} type="button">
+                        Save
+                    </button>
+
+                </tr>
             </table>
         </div>
     );
