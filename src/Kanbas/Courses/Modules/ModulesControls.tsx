@@ -1,5 +1,6 @@
 import { FaPlus } from "react-icons/fa6";
 import GreenCheckmark from "./GreenCheckmark";
+import { MdDoNotDisturbAlt } from "react-icons/md";
 export default function ModulesControls() {
     return (
         <div id="wd-modules-controls" className="text-nowrap">
@@ -24,12 +25,12 @@ export default function ModulesControls() {
                     </li>
                     <li>
                         <a id="wd-unpublish-all-modules-and-items" className="dropdown-item" href="#">
-                            {/* Need circle with line through it*/}
+                            <MdDoNotDisturbAlt className="me-2 fs-5" />
                             Unpublish all modules and items</a>
                     </li>
                     <li>
                         <a id="wd-unpublish-modules-only" className="dropdown-item" href="#">
-                            {/* Need circle with line through it*/}
+                            <MdDoNotDisturbAlt className="me-2 fs-5" />
                             Unpublish modules only</a>
                     </li>
                 </ul>
