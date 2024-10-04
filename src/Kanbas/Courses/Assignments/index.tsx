@@ -27,7 +27,9 @@ export default function Assignments() {
                 <li className="wd-module list-group-item p-0 mb-5 fs-5 border-gray">
                     <div className="wd-title p-3 ps-2 bg-secondary">
                         <h3 id="wd-assignments-title">
-                            ASSIGNMENTS <span /> 40% of Total <button className="btn p-0"><FaPlus /></button>
+                            <div className="d-flex justify-content-between">
+                            ASSIGNMENTS <div className="right-justify"> 40% of Total <button className="btn p-0"><FaPlus /></button></div>
+                            </div>
                         </h3>
                     </div>
                     <ul id="wd-assignment-list" className="wd-lessons list-group rounded-0">

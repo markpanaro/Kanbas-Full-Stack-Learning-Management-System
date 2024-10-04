@@ -1,7 +1,8 @@
 export default function AssignmentEditor() {
     return (
         <div id="wd-assignments-editor">
-            <div className="col">
+            <div className="container">
+
                 <label htmlFor="wd-name">
                     Assignment Name
                 </label><br />
@@ -9,7 +10,8 @@ export default function AssignmentEditor() {
                 <input id="wd-name" value="A1 - ENV + HTML"
                     className="form-control mb-2" /><br />
                 <textarea id="wd-description" className="form-control mb-2">
-                    The assignment is available online Submit a link to the landing page of...
+                    The assignment is available online
+                    Submit a link to the landing page of...
                 </textarea>
                 <br />
                 <div className="">
@@ -45,7 +47,7 @@ export default function AssignmentEditor() {
                                 </select>
                                 <br />
 
-                                <label id="">Online Entry Options:</label><br />
+                                <label id=""><b>Online Entry Options</b></label><br />
 
                                 <input type="checkbox" name="check-entry" id="wd-text-entry" />
                                 <label htmlFor="wd-text-entry">Text Entry</label><br />
@@ -67,42 +69,46 @@ export default function AssignmentEditor() {
                 </div>
                 <br />
 
-                <div className="form-control mb-2">
-                    Assign to <br /><input className="form-control mb-2" id="wd-assign-to" value="Everyone" /><br /><br />
+                Assign
+                <div className="form-control mb-2" >
+                    <b>Assign to</b> <br /><input className="form-control mb-2" id="wd-assign-to" value="Everyone" /><br /><br />
 
-                    <label htmlFor="wd-due-date"> Due: </label>
+                    <label htmlFor="wd-due-date"> <b>Due</b> </label>
                     <input type="date"
                         id="wd-due-date"
                         className="form-control mb-2"
                         value="2024-05-13" />
                     <br />
-
                     <div className="row">
-                        <label htmlFor="wd-available-from"> Available from: </label>
-                        <input type="date"
-                            id="wd-available-from"
-                            className="form-control mb-2"
-                            value="2024-05-06" />
-                        <label htmlFor="wd-available-until"> Available until: </label>
-                        <input type="date"
-                            id="wd-available-until"
-                            className="form-control mb-2"
-                            value="2024-05-20" /><br />
+                        <div className="col-md-6">
+                            <label htmlFor="wd-available-from"> <b>Available from</b> </label>
+                            <input type="date"
+                                id="wd-available-from"
+                                className="form-control mb-2"
+                                value="2024-05-06" />
+                        </div>
+                        <div className="col-md-6">
+                            <label htmlFor="wd-available-until"> <b>Available until</b> </label>
+                            <input type="date"
+                                id="wd-available-until"
+                                className="form-control mb-2"
+                                value="2024-05-20" /><br />
+                        </div>
                     </div>
-
                 </div>
-                <h5 id="wd-buttons">__________________________________________________________________________________________________________</h5>
-
-                <button id="wd-cancel"
-                    onClick={() => alert("Cancelled")} type="button"
-                    className="btn btn-secondary w-10">
-                    Cancel</button>
-                <button id="wd-save"
-                    onClick={() => alert("Saved")} type="button"
-                    className="btn btn-danger w-10">
-                    Save</button>
             </div>
-        </div >
+            <h5 id="wd-buttons">_____________________________________________________________________________________</h5>
+
+            <button id="wd-cancel"
+                onClick={() => alert("Cancelled")} type="button"
+                className="btn btn-secondary w-10">
+                Cancel</button>
+            <button id="wd-save"
+                onClick={() => alert("Saved")} type="button"
+                className="btn btn-danger w-10">
+                Save</button>
+        </div>
+
 
 
 
