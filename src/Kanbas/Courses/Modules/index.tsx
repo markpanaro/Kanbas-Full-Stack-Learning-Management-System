@@ -44,15 +44,15 @@ export default function Modules() {
                     <ul className="wd-lessons list-group rounded-0">
                         <li className="wd-lesson list-group-item p-3 ps-1">
                             <BsGripVertical className="me-2 fs-3" />
-                            LEARNING OBJECTIVES
+                            LEARNING OBJECTIVES 
                             <LessonControlButtons /></li>
                         <li className="wd-lesson list-group-item p-3 ps-1">
                             <BsGripVertical className="me-2 fs-3" />
-                            LESSON 1
+                            LESSON 1 
                             <LessonControlButtons /></li>
                         <li className="wd-lesson list-group-item p-3 ps-1">
                             <BsGripVertical className="me-2 fs-3" />
-                            LESSON 2
+                            LESSON 2 
                             <LessonControlButtons /></li>
                     </ul>
                 </li>

@@ -45,3 +45,7 @@ body * {
 .wd-lesson {
     border-left: 3px solid green !important;
 }
+
+.right-justify {
+    text-align: right;
+}
