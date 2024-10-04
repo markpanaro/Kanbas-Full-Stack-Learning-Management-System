@@ -49,3 +49,24 @@ body * {
 .right-justify {
     text-align: right;
 }
+
+.wd-assignment-link {
+    color: black;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.red-text {
+    color: red;
+}
+
+#wd-assignments-editor {
+    max-width: 600px;
+
+
+}
+
+#wd-assignments-editor input[type="date"] {
+    width: 200px;
+    max-width: 100%;
+}
