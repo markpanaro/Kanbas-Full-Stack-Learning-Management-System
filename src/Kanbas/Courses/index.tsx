@@ -3,9 +3,10 @@ import AssignmentEditor from "./Assignments/Editor";
 import CoursesNavigation from "./Navigation";
 import Modules from "./Modules";
 import Home from "./Home";
-import { Navigate, Route, Routes } from "react-router";
+import { Navigate, Route, Routes, useParams } from "react-router";
 import { FaAlignJustify } from "react-icons/fa6";
 import PeopleTable from "./People/Table";
+import { courses } from "../Database";
 export default function Courses() {
     return (
         <div id="wd-courses">
