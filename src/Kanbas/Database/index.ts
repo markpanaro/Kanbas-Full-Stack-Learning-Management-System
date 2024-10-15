@@ -1,2 +1,3 @@
 import courses from "./courses-su24.json";
-export { courses };
+import modules from "./modules.json";
+export { courses, modules };
