@@ -1,8 +1,14 @@
 import { BsGripVertical } from "react-icons/bs";
 import LessonControlButtons from "../Modules/LessonControlButtons";
 import { FaPlus, FaSearch } from 'react-icons/fa';
+import * as db from "../../Database";
+import { useParams } from "react-router";
 
 export default function Assignments() {
+
+    const { cid } = useParams();
+    const assignments = db.assignments;
+
     return (
         <div id="wd-assignments">
             <div className="input-group">
@@ -28,35 +34,24 @@ export default function Assignments() {
                     <div className="wd-title p-3 ps-2 bg-secondary">
                         <h3 id="wd-assignments-title">
                             <div className="d-flex justify-content-between">
-                            ASSIGNMENTS <div className="right-justify"> 40% of Total <button className="btn p-0"><FaPlus /></button></div>
+                                ASSIGNMENTS <div className="right-justify"> 40% of Total <button className="btn p-0"><FaPlus /></button></div>
                             </div>
                         </h3>
                     </div>
                     <ul id="wd-assignment-list" className="wd-lessons list-group rounded-0">
-                        <li className="wd-lesson list-group-item p-3 ps-5">
-                            <a className="wd-assignment-link"
-                                href="#/Kanbas/Courses/1234/Assignments/123">
-                                A1 - ENV + HTML
-                            </a>
-                            <br /><span className="red-text">Multiple Modules</span> | <b>Not available until </b> May 6 at 12:00am |<br />
-                            <b>Due</b> May 13 at 11:59pm | 100 pts
-                            <LessonControlButtons /></li>
-                        <li className="wd-lesson list-group-item p-3 ps-5">
-                            <a className="wd-assignment-link"
-                                href="#/Kanbas/Courses/1234/Assignments/123">
-                                A2 - CSS + BOOTSTRAP
-                            </a>
-                            <br /><span className="red-text">Multiple Modules</span> | <b>Not available until </b> May 13 at 12:00am |<br />
-                            <b>Due</b> May 20 at 11:59pm | 100 pts
-                            <LessonControlButtons /></li>
-                        <li className="wd-lesson list-group-item p-3 ps-5">
-                            <a className="wd-assignment-link"
-                                href="#/Kanbas/Courses/1234/Assignments/123">
-                                A3 - JAVASCRIPT + REACT
-                            </a>
-                            <br /><span className="red-text">Multiple Modules</span> | <b>Not available until </b> May 20 at 12:00am |<br />
-                            <b>Due</b> May 27 at 11:59pm | 100 pts
-                            <LessonControlButtons /></li>
+
+                        {assignments
+                            .filter((module: any) => module.course === cid)
+                            .map((assignment) => (
+                                <li className="wd-lesson list-group-item p-3 ps-5">
+                                    <a className="wd-assignment-link"
+                                        href={`#/Kanbas/Courses/${assignment.course}/Assignments/${assignment._id}`}>
+                                        {assignment.title}
+                                    </a>
+                                    <br /><span className="red-text">Multiple Modules</span> | <b>Not available until </b> May 6 at 12:00am |<br />
+                                    <b>Due</b> May 12 at 11:59pm | 100 pts
+                                    <LessonControlButtons /></li>
+                            ))}
                     </ul>
                 </li>
             </ul>

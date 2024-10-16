@@ -1,4 +1,12 @@
+import { useLocation, useParams } from "react-router";
+import * as db from "../../Database";
+
 export default function AssignmentEditor() {
+    const { pathname } = useLocation();
+    const assignments = db.assignments;
+    const assignmentID = pathname.split("/")[5];
+    const assignmentName = (assignments.find((assignment) => assignment._id === assignmentID))?.title;
+
     return (
         <div id="wd-assignments-editor">
             <div className="container">
@@ -7,7 +15,7 @@ export default function AssignmentEditor() {
                     Assignment Name
                 </label><br />
 
-                <input id="wd-name" value="A1 - ENV + HTML"
+                <input id="wd-name" value={assignmentName}
                     className="form-control mb-2" /><br />
                 <textarea id="wd-description" className="form-control mb-2">
                     The assignment is available online
