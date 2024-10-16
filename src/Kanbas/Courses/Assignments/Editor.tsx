@@ -6,6 +6,10 @@ export default function AssignmentEditor() {
     const assignments = db.assignments;
     const assignmentID = pathname.split("/")[5];
     const assignmentName = (assignments.find((assignment) => assignment._id === assignmentID))?.title;
+    const assignmentAvailable = (assignments.find((assignment) => assignment._id === assignmentID))?.available_raw;
+    const assignmentDue = (assignments.find((assignment) => assignment._id === assignmentID))?.due_raw;
+    const assignmentPoints = (assignments.find((assignment) => assignment._id === assignmentID))?.points;
+    const assignmentDesc = (assignments.find((assignment) => assignment._id === assignmentID))?.description;
 
     return (
         <div id="wd-assignments-editor">
@@ -18,8 +22,7 @@ export default function AssignmentEditor() {
                 <input id="wd-name" value={assignmentName}
                     className="form-control mb-2" /><br />
                 <textarea id="wd-description" className="form-control mb-2">
-                    The assignment is available online
-                    Submit a link to the landing page of...
+                    {assignmentDesc}
                 </textarea>
                 <br />
                 <div className="">
@@ -27,7 +30,7 @@ export default function AssignmentEditor() {
                     <div className="">
                         <label htmlFor="wd-points">Points</label>
 
-                        <input id="wd-points" className="form-control mb-1" value={100} />
+                        <input id="wd-points" className="form-control mb-1" value={assignmentPoints} />
 
                     </div><br />
 
@@ -85,7 +88,7 @@ export default function AssignmentEditor() {
                     <input type="date"
                         id="wd-due-date"
                         className="form-control mb-2"
-                        value="2024-05-13" />
+                        value={assignmentDue} />
                     <br />
                     <div className="row">
                         <div className="col-md-6">
@@ -93,14 +96,14 @@ export default function AssignmentEditor() {
                             <input type="date"
                                 id="wd-available-from"
                                 className="form-control mb-2"
-                                value="2024-05-06" />
+                                value={assignmentAvailable} />
                         </div>
                         <div className="col-md-6">
                             <label htmlFor="wd-available-until"> <b>Available until</b> </label>
                             <input type="date"
                                 id="wd-available-until"
                                 className="form-control mb-2"
-                                value="2024-05-20" /><br />
+                                value={assignmentDue} /><br />
                         </div>
                     </div>
                 </div>
