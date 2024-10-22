@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import * as db from "./Database";
-export default function Dashboard() {
+export default function Dashboard({ courses, course, setCourse, addNewCourse,
+    deleteCourse, updateCourse }: {
+        courses: any[]; course: any; setCourse: (course: any) => void;
+        addNewCourse: () => void; deleteCourse: (course: any) => void;
+        updateCourse: () => void;
+    }) {
+
+    {/*
     const [courses, setCourses] = useState<any[]>(db.courses);
     const [course, setCourse] = useState<any>({
         _id: "0", name: "New Course", number: "New Number",
@@ -29,7 +36,7 @@ export default function Dashboard() {
             })
         );
     };
-
+*/}
 
 
     return (
