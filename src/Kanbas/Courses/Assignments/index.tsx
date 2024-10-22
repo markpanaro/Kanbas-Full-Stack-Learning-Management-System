@@ -50,7 +50,16 @@ export default function Assignments() {
                                     </a>
                                     <br /><span className="red-text">Multiple Modules</span> | <b>Not available until </b> {assignment.available} |<br />
                                     <b>Due</b> {assignment.due} | {assignment.points} pts
-                                    <LessonControlButtons /></li>
+
+
+
+
+                                    { /*LessonControlButtons  /> */}  </li>
+
+
+
+
+
                             ))}
                     </ul>
                 </li>
