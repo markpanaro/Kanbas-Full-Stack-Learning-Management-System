@@ -1,5 +1,8 @@
 import { useLocation, useParams } from "react-router";
 import * as db from "../../Database";
+import { addAssignment, deleteAssignment, updateAssignment }
+    from "./reducer";
+import { useDispatch } from "react-redux";
 
 export default function AssignmentEditor() {
     const { pathname } = useLocation();
@@ -10,6 +13,8 @@ export default function AssignmentEditor() {
     const assignmentDue = (assignments.find((assignment) => assignment._id === assignmentID))?.due_raw;
     const assignmentPoints = (assignments.find((assignment) => assignment._id === assignmentID))?.points;
     const assignmentDesc = (assignments.find((assignment) => assignment._id === assignmentID))?.description;
+
+    const dispatch = useDispatch();
 
     return (
         <div id="wd-assignments-editor">
@@ -114,8 +119,21 @@ export default function AssignmentEditor() {
                 onClick={() => alert("Cancelled")} type="button"
                 className="btn btn-secondary w-10">
                 Cancel</button>
-            <button id="wd-save"
+            {/*<button id="wd-save"
                 onClick={() => alert("Saved")} type="button"
+                className="btn btn-danger w-10">
+                Save</button> */}
+            <button id="wd-save"
+                onClick={() => {
+                    dispatch(addAssignment({
+                        title: "Test",
+                        course: "RS101",
+                        _id: "A101",
+                        available: 'TBD',
+                        due: 'TBD',
+                        points: 0,
+                    }));
+                }} type="button"
                 className="btn btn-danger w-10">
                 Save</button>
         </div>

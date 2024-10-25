@@ -3,11 +3,26 @@ import LessonControlButtons from "../Modules/LessonControlButtons";
 import { FaPlus, FaSearch } from 'react-icons/fa';
 import * as db from "../../Database";
 import { useParams } from "react-router";
+import { useSelector, useDispatch } from "react-redux";
 
 export default function Assignments() {
 
     const { cid } = useParams();
-    const assignments = db.assignments;
+    const dispatch = useDispatch();
+    const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+    {/*const assignments = db.assignments;*/ }
+
+    interface Assignment {
+        _id: string;
+        title: string;
+        course: string;
+        available: string;
+        due: string;
+        points: number; // Assuming points should be a number
+        available_raw: string;
+        due_raw: string;
+        description: string;
+    }
 
     return (
         <div id="wd-assignments">
@@ -42,7 +57,7 @@ export default function Assignments() {
 
                         {assignments
                             .filter((module: any) => module.course === cid)
-                            .map((assignment) => (
+                            .map((assignment: Assignment) => (
                                 <li className="wd-lesson list-group-item p-3 ps-5">
                                     <a className="wd-assignment-link"
                                         href={`#/Kanbas/Courses/${assignment.course}/Assignments/${assignment._id}`}>
@@ -55,8 +70,6 @@ export default function Assignments() {
 
 
                                     { /*LessonControlButtons  /> */}  </li>
-
-
 
 
 
