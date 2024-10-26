@@ -1,15 +1,24 @@
 import { BsGripVertical } from "react-icons/bs";
 import LessonControlButtons from "../Modules/LessonControlButtons";
 import { FaPlus, FaSearch } from 'react-icons/fa';
+import ProtectedAdminRoute from "../../Account/ProtectedAdminRoute"
 import * as db from "../../Database";
+import GreenCheckmark from "../Modules/GreenCheckmark";
+import { FaPencil } from "react-icons/fa6";
+import { FaTrash } from "react-icons/fa";
+import { deleteAssignment } from "./reducer";
 import { useParams } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
+import { IoEllipsisVertical } from "react-icons/io5";
+import { useState } from "react";
 
 export default function Assignments() {
 
     const { cid } = useParams();
     const dispatch = useDispatch();
     const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+    let [deleteWindow, setDeleteWindow] = useState(false);
+    let [deleteId, setDeleteId] = useState("");
     {/*const assignments = db.assignments;*/ }
 
     interface Assignment {
@@ -23,6 +32,8 @@ export default function Assignments() {
         due_raw: string;
         description: string;
     }
+
+
 
     return (
         <div id="wd-assignments">
@@ -39,9 +50,14 @@ export default function Assignments() {
                 <button id="wd-add-assignment-group" className="btn btn-lg btn-secondary mt-1 text-start">
                     <FaPlus className="me-2 fs-5" /> Group
                 </button>
-                <button id="wd-add-assignment" className="btn btn-lg btn-danger mt-1 text-start">
-                    <FaPlus className="me-2 fs-5" /> Assignment
-                </button>
+                <ProtectedAdminRoute>
+                    <button id="wd-add-assignment" className="btn btn-lg btn-danger mt-1 text-start"
+                        onClick={() => {
+                            window.location.href = `#/Kanbas/Courses/${cid}/Assignments/new`;
+                        }}>
+                        <FaPlus className="me-2 fs-5" /> Assignment
+                    </button>
+                </ProtectedAdminRoute>
             </div>
 
             <ul id="wd-modules" className="list-group rounded-0">
@@ -63,11 +79,30 @@ export default function Assignments() {
                                         href={`#/Kanbas/Courses/${assignment.course}/Assignments/${assignment._id}`}>
                                         {assignment.title}
                                     </a>
-                                    <br /><span className="red-text">Multiple Modules</span> | <b>Not available until </b> {assignment.available} |<br />
-                                    <b>Due</b> {assignment.due} | {assignment.points} pts
+                                    <br /><span className="red-text">Multiple Modules</span> | <b>Not available until </b> {assignment.available || assignment.available_raw.toString()} |<br />
+                                    <b>Due</b> {assignment.due || assignment.due_raw.toString()} | {assignment.points} pts
 
 
+                                    <div className="float-end">
+                                        <ProtectedAdminRoute>
+                                            <FaPencil onClick={() =>
+                                                window.location.href = `#/Kanbas/Courses/${assignment.course}/Assignments/${assignment._id}`}
+                                                className="text-primary me-3" />
+                                            {/*<FaTrash className="text-danger me-2 mb-1" onClick={() => dispatch(deleteAssignment(assignment._id))} /> */}
+                                            <FaTrash className="text-danger me-2 mb-1" onClick={() => { setDeleteWindow(true); setDeleteId(assignment._id); }} />
 
+
+                                        </ProtectedAdminRoute>
+                                        <GreenCheckmark />
+                                        <IoEllipsisVertical className="fs-4" />
+                                    </div>
+                                    {deleteWindow && assignment._id === deleteId && (
+                                        <div className="confirmation-dialog">
+                                            <p>Are you sure you want to delete this assignment?</p>
+                                            <button onClick={() => dispatch(deleteAssignment(assignment._id))}>Yes</button>
+                                            <button onClick={() => setDeleteWindow(false)}>No</button>
+                                        </div>
+                                    )}
 
                                     { /*LessonControlButtons  /> */}  </li>
 

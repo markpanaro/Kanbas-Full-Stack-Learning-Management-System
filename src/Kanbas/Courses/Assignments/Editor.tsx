@@ -2,17 +2,25 @@ import { useLocation, useParams } from "react-router";
 import * as db from "../../Database";
 import { addAssignment, deleteAssignment, updateAssignment }
     from "./reducer";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
 
 export default function AssignmentEditor() {
     const { pathname } = useLocation();
-    const assignments = db.assignments;
-    const assignmentID = pathname.split("/")[5];
-    const assignmentName = (assignments.find((assignment) => assignment._id === assignmentID))?.title;
-    const assignmentAvailable = (assignments.find((assignment) => assignment._id === assignmentID))?.available_raw;
-    const assignmentDue = (assignments.find((assignment) => assignment._id === assignmentID))?.due_raw;
-    const assignmentPoints = (assignments.find((assignment) => assignment._id === assignmentID))?.points;
-    const assignmentDesc = (assignments.find((assignment) => assignment._id === assignmentID))?.description;
+    //const assignments = db.assignments;
+    const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+    const { cid } = useParams();
+    let assignmentID = pathname.split("/")[5];
+    const [assignmentName, setAssignmentName] = useState((assignments.find((assignment: any) => assignment._id === assignmentID))?.title);
+    const [assignmentAvailable, setAssignmentAvailable] = useState((assignments.find((assignment: any) => assignment._id === assignmentID))?.available_raw);
+    const [assignmentDue, setAssignmentDue] = useState((assignments.find((assignment: any) => assignment._id === assignmentID))?.due_raw);
+    const [assignmentPoints, setAssignmentPoints] = useState((assignments.find((assignment: any) => assignment._id === assignmentID))?.points);
+    const [assignmentDesc, setAssignmentDesc] = useState((assignments.find((assignment: any) => assignment._id === assignmentID))?.description);
+
+    if (assignmentID === "new") {
+        assignmentID = new Date().toISOString();
+    }
+
 
     const dispatch = useDispatch();
 
@@ -25,8 +33,10 @@ export default function AssignmentEditor() {
                 </label><br />
 
                 <input id="wd-name" value={assignmentName}
+                    onChange={(e) => setAssignmentName(e.target.value)}
                     className="form-control mb-2" /><br />
-                <textarea id="wd-description" className="form-control mb-2">
+                <textarea id="wd-description" className="form-control mb-2"
+                    onChange={(e) => setAssignmentDesc(e.target.value)}>
                     {assignmentDesc}
                 </textarea>
                 <br />
@@ -35,7 +45,8 @@ export default function AssignmentEditor() {
                     <div className="">
                         <label htmlFor="wd-points">Points</label>
 
-                        <input id="wd-points" className="form-control mb-1" value={assignmentPoints} />
+                        <input id="wd-points" className="form-control mb-1" value={assignmentPoints}
+                            onChange={(e) => setAssignmentPoints(e.target.value)} />
 
                     </div><br />
 
@@ -93,6 +104,7 @@ export default function AssignmentEditor() {
                     <input type="date"
                         id="wd-due-date"
                         className="form-control mb-2"
+                        onChange={(e) => setAssignmentDue(e.target.value)}
                         value={assignmentDue} />
                     <br />
                     <div className="row">
@@ -101,6 +113,7 @@ export default function AssignmentEditor() {
                             <input type="date"
                                 id="wd-available-from"
                                 className="form-control mb-2"
+                                onChange={(e) => setAssignmentAvailable(e.target.value)}
                                 value={assignmentAvailable} />
                         </div>
                         <div className="col-md-6">
@@ -116,7 +129,8 @@ export default function AssignmentEditor() {
             <h5 id="wd-buttons">_____________________________________________________________________________________</h5>
 
             <button id="wd-cancel"
-                onClick={() => alert("Cancelled")} type="button"
+                onClick={() => window.location.href = `#/Kanbas/Courses/${cid}/Assignments/`
+                } type="button"
                 className="btn btn-secondary w-10">
                 Cancel</button>
             {/*<button id="wd-save"
@@ -126,13 +140,15 @@ export default function AssignmentEditor() {
             <button id="wd-save"
                 onClick={() => {
                     dispatch(addAssignment({
-                        title: "Test",
-                        course: "RS101",
-                        _id: "A101",
-                        available: 'TBD',
-                        due: 'TBD',
-                        points: 0,
+                        title: assignmentName,
+                        course: cid,
+                        _id: assignmentID,
+                        available_raw: assignmentAvailable,
+                        due_raw: assignmentDue,
+                        points: assignmentPoints,
+                        description: assignmentDesc,
                     }));
+                    window.location.href = `#/Kanbas/Courses/${cid}/Assignments/`;
                 }} type="button"
                 className="btn btn-danger w-10">
                 Save</button>
