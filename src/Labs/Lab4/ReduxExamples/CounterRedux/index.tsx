@@ -8,9 +8,11 @@ export default function CounterRedux() {
             <h2>Counter Redux</h2>
             <h3>{count}</h3>
             <button onClick={() => dispatch(increment())}
-                id="wd-counter-redux-increment-click"> Increment </button>
+                id="wd-counter-redux-increment-click"
+                className="btn btn-success m-1"> Increment </button>
             <button onClick={() => dispatch(decrement())}
-                id="wd-counter-redux-decrement-click"> Decrement </button>
+                id="wd-counter-redux-decrement-click"
+                className="btn btn-danger m-1"> Decrement </button>
             <hr />
         </div>
     );
