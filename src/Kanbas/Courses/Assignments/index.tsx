@@ -27,13 +27,11 @@ export default function Assignments() {
         course: string;
         available: string;
         due: string;
-        points: number; // Assuming points should be a number
+        points: number;
         available_raw: string;
         due_raw: string;
         description: string;
     }
-
-
 
     return (
         <div id="wd-assignments">
@@ -99,15 +97,12 @@ export default function Assignments() {
                                     {deleteWindow && assignment._id === deleteId && (
                                         <div className="confirmation-dialog">
                                             <p>Are you sure you want to delete this assignment?</p>
-                                            <button onClick={() => dispatch(deleteAssignment(assignment._id))}>Yes</button>
-                                            <button onClick={() => setDeleteWindow(false)}>No</button>
+                                            <button className="btn btn-success m-1" onClick={() => dispatch(deleteAssignment(assignment._id))}>Yes</button>
+                                            <button className="btn btn-danger m-1" onClick={() => setDeleteWindow(false)}>No</button>
                                         </div>
                                     )}
 
                                     { /*LessonControlButtons  /> */}  </li>
-
-
-
                             ))}
                     </ul>
                 </li>

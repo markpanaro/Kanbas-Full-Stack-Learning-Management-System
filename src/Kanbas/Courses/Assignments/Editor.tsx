@@ -153,10 +153,5 @@ export default function AssignmentEditor() {
                 className="btn btn-danger w-10">
                 Save</button>
         </div>
-
-
-
-
-
     );
 }

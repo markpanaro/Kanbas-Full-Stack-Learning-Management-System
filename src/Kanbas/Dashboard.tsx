@@ -16,13 +16,8 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
     const navigate = useNavigate();
 
     const { currentUser } = useSelector((state: any) => state.accountReducer);
-    //const { enrollments } = db;
     const { enrollments } = useSelector((state: any) => state.enrollmentsReducer);
-
     const [changeEnrollments, setChangeEnrollments] = useState<boolean>(true);
-
-
-
 
     return (
         <div id="wd-dashboard">
@@ -46,18 +41,11 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
                 </h5><hr />
             </ProtectedAdminRoute>
 
-
-
             <ProtectedStudentRoute>
                 <button className="btn btn-primary float-end"
                     id="wd-enrollments-click"
                     onClick={() => setChangeEnrollments(change => !change)} > Enrollments </button>
             </ProtectedStudentRoute>
-
-
-
-
-
 
             <div id="wd-dashboard-courses" className="row">
                 {changeEnrollments ? (
@@ -75,8 +63,6 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
                                     <div className="card rounded-3 overflow-hidden">
                                         <Link to={`/Kanbas/Courses/${course._id}/Home`}
                                             className="wd-dashboard-course-link text-decoration-none text-dark" >
-
-
                                             {/* <img src={`/images/${course._id}.jpg`} width="100%" height={160} /> */}
                                             <img src={`/images/react.jpg`} width="100%" height={160} />
                                             <div className="card-body">
@@ -103,8 +89,6 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
                                                         Edit
                                                     </button>
                                                 </ProtectedAdminRoute>
-
-
                                             </div>
                                         </Link>
                                     </div>
@@ -154,8 +138,6 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
                                             </button>
                                         </ProtectedAdminRoute>
 
-
-
                                         {enrollments.some((enrollment: any) =>
                                             enrollment.user === currentUser._id &&
                                             enrollment.course === course._id) ? (
@@ -180,9 +162,6 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
                                                 Enroll
                                             </button>
                                         )}
-
-
-
                                     </div>
                                     {/*</Link> */}
                                 </div>
@@ -191,12 +170,6 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
                     </div>
                 )}
             </div>
-
-
-
-
-
         </div>
-
     );
 }

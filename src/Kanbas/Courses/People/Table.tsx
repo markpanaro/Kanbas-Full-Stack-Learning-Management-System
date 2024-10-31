@@ -5,7 +5,6 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 export default function PeopleTable() {
     const { cid } = useParams();
-    //const { users, enrollments } = db;
     const { users } = db;
     const { enrollments } = useSelector((state: any) => state.enrollmentsReducer);
     return (

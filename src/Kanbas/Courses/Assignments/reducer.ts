@@ -17,18 +17,7 @@ const assignmentsSlice = createSlice({
                     ...assignment,
                 });
             }
-            {/* const newAssignment: any = {
-                _id: assignment._id || new Date().getTime().toString(),
-                lessons: [],
-                name: assignment.name,
-                description: assignment.description,
-                points: assignment.points,
-                due_raw: assignment.due_raw,
-                available_raw: assignment.available_raw,
-                course: assignment.course,
 
-            };
-            state.assignments = [...state.assignments, newAssignment] as any; */}
             {/*state.assignments.push(newAssignment); */ }
         },
         deleteAssignment: (state, { payload: assignmentId }) => {
