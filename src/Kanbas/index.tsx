@@ -6,9 +6,10 @@ import Courses from "./Courses";
 import "./styles.css";
 import * as db from "./Database";
 import { useState } from "react";
-import store from "./store";
-import { Provider } from "react-redux";
+// import store from "./store";
+// import { Provider } from "react-redux";
 import ProtectedRoute from "./Account/ProtectedRoute";
+import Session from "./Account/Session";
 
 export default function Kanbas() {
     const [courses, setCourses] = useState<any[]>(db.courses);
@@ -35,7 +36,8 @@ export default function Kanbas() {
     };
 
     return (
-        <Provider store={store}>
+        // <Provider store={store}>
+        <Session>
             <div id="wd-kanbas">
                 <KanbasNavigation />
                 <div className="wd-main-content-offset p-3">
@@ -56,6 +58,7 @@ export default function Kanbas() {
                     </Routes>
                 </div>
             </div >
-        </Provider>
+        </Session>
+        // </Provider>
     );
 }
