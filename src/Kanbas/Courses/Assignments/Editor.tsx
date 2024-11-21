@@ -4,6 +4,7 @@ import { addAssignment, deleteAssignment, updateAssignment }
     from "./reducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
+import * as coursesClient from "../../Courses/client"
 
 export default function AssignmentEditor() {
     const { pathname } = useLocation();
@@ -16,8 +17,21 @@ export default function AssignmentEditor() {
     const [assignmentDue, setAssignmentDue] = useState((assignments.find((assignment: any) => assignment._id === assignmentID))?.due_raw);
     const [assignmentPoints, setAssignmentPoints] = useState((assignments.find((assignment: any) => assignment._id === assignmentID))?.points);
     const [assignmentDesc, setAssignmentDesc] = useState((assignments.find((assignment: any) => assignment._id === assignmentID))?.description);
-    let createAssignmentFlag = false;
 
+    const createAssignmentForCourse = async () => {
+        if (!cid) return;
+        const newAssignment = {
+            title: assignmentName, course: cid, _id: assignmentID,
+            available_raw: assignmentAvailable,
+            due_raw: assignmentDue,
+            points: assignmentPoints,
+            description: assignmentDesc,
+        };
+        const assignment = await coursesClient.createAssignmentForCourse(cid, newAssignment);
+        dispatch(addAssignment(assignment));
+    };
+
+    let createAssignmentFlag = false;
     if (assignmentID === "new") {
         assignmentID = new Date().toISOString();
         createAssignmentFlag = true;
@@ -140,8 +154,10 @@ export default function AssignmentEditor() {
                 className="btn btn-danger w-10">
                 Save</button> */}
             <button id="wd-save"
-                onClick={() => {
+                onClick={async () => {
                     if (createAssignmentFlag) {
+                        createAssignmentForCourse();
+                        /*
                         dispatch(addAssignment({
                             title: assignmentName,
                             course: cid,
@@ -150,7 +166,7 @@ export default function AssignmentEditor() {
                             due_raw: assignmentDue,
                             points: assignmentPoints,
                             description: assignmentDesc,
-                        }))
+                        })) */
                     } else {
                         dispatch(updateAssignment({
                             title: assignmentName,

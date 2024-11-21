@@ -6,7 +6,7 @@ import * as db from "../../Database";
 import GreenCheckmark from "../Modules/GreenCheckmark";
 import { FaPencil } from "react-icons/fa6";
 import { FaTrash } from "react-icons/fa";
-import { setAssignments, deleteAssignment } from "./reducer";
+import { setAssignments, deleteAssignment, addAssignment } from "./reducer";
 import { useParams } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import { IoEllipsisVertical } from "react-icons/io5";
@@ -39,7 +39,7 @@ export default function Assignments() {
     const fetchAssignments = async () => {
         const assignments = await coursesClient.findAssignmentsForCourse(cid as string);
         dispatch(setAssignments(assignments));
-    };
+    };  
     useEffect(() => {
         fetchAssignments();
     }, []);
