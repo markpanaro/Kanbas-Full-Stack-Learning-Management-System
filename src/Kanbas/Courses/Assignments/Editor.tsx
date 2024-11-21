@@ -16,9 +16,11 @@ export default function AssignmentEditor() {
     const [assignmentDue, setAssignmentDue] = useState((assignments.find((assignment: any) => assignment._id === assignmentID))?.due_raw);
     const [assignmentPoints, setAssignmentPoints] = useState((assignments.find((assignment: any) => assignment._id === assignmentID))?.points);
     const [assignmentDesc, setAssignmentDesc] = useState((assignments.find((assignment: any) => assignment._id === assignmentID))?.description);
+    let createAssignmentFlag = false;
 
     if (assignmentID === "new") {
         assignmentID = new Date().toISOString();
+        createAssignmentFlag = true;
     }
 
 
@@ -139,15 +141,28 @@ export default function AssignmentEditor() {
                 Save</button> */}
             <button id="wd-save"
                 onClick={() => {
-                    dispatch(addAssignment({
-                        title: assignmentName,
-                        course: cid,
-                        _id: assignmentID,
-                        available_raw: assignmentAvailable,
-                        due_raw: assignmentDue,
-                        points: assignmentPoints,
-                        description: assignmentDesc,
-                    }));
+                    if (createAssignmentFlag) {
+                        dispatch(addAssignment({
+                            title: assignmentName,
+                            course: cid,
+                            _id: assignmentID,
+                            available_raw: assignmentAvailable,
+                            due_raw: assignmentDue,
+                            points: assignmentPoints,
+                            description: assignmentDesc,
+                        }))
+                    } else {
+                        dispatch(updateAssignment({
+                            title: assignmentName,
+                            course: cid,
+                            _id: assignmentID,
+                            available_raw: assignmentAvailable,
+                            due_raw: assignmentDue,
+                            points: assignmentPoints,
+                            description: assignmentDesc,
+                        }))
+                    }
+                    ;
                     window.location.href = `#/Kanbas/Courses/${cid}/Assignments/`;
                 }} type="button"
                 className="btn btn-danger w-10">

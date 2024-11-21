@@ -6,11 +6,12 @@ import * as db from "../../Database";
 import GreenCheckmark from "../Modules/GreenCheckmark";
 import { FaPencil } from "react-icons/fa6";
 import { FaTrash } from "react-icons/fa";
-import { deleteAssignment } from "./reducer";
+import { setAssignments, deleteAssignment } from "./reducer";
 import { useParams } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import { IoEllipsisVertical } from "react-icons/io5";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import * as coursesClient from "../../Courses/client"
 
 export default function Assignments() {
 
@@ -21,6 +22,7 @@ export default function Assignments() {
     let [deleteId, setDeleteId] = useState("");
     {/*const assignments = db.assignments;*/ }
 
+    /*
     interface Assignment {
         _id: string;
         title: string;
@@ -32,6 +34,16 @@ export default function Assignments() {
         due_raw: string;
         description: string;
     }
+        */
+
+    const fetchAssignments = async () => {
+        const assignments = await coursesClient.findAssignmentsForCourse(cid as string);
+        dispatch(setAssignments(assignments));
+    };
+    useEffect(() => {
+        fetchAssignments();
+    }, []);
+
 
     return (
         <div id="wd-assignments">
@@ -69,41 +81,39 @@ export default function Assignments() {
                     </div>
                     <ul id="wd-assignment-list" className="wd-lessons list-group rounded-0">
 
-                        {assignments
-                            .filter((module: any) => module.course === cid)
-                            .map((assignment: Assignment) => (
-                                <li className="wd-lesson list-group-item p-3 ps-5">
-                                    <a className="wd-assignment-link"
-                                        href={`#/Kanbas/Courses/${assignment.course}/Assignments/${assignment._id}`}>
-                                        {assignment.title}
-                                    </a>
-                                    <br /><span className="red-text">Multiple Modules</span> | <b>Not available until </b> {assignment.available || assignment.available_raw.toString()} |<br />
-                                    <b>Due</b> {assignment.due || assignment.due_raw.toString()} | {assignment.points} pts
+                        {assignments.map((assignment: any) => (
+                            <li className="wd-lesson list-group-item p-3 ps-5">
+                                <a className="wd-assignment-link"
+                                    href={`#/Kanbas/Courses/${assignment.course}/Assignments/${assignment._id}`}>
+                                    {assignment.title}
+                                </a>
+                                <br /><span className="red-text">Multiple Modules</span> | <b>Not available until </b> {assignment.available || assignment.available_raw.toString()} |<br />
+                                <b>Due</b> {assignment.due || assignment.due_raw.toString()} | {assignment.points} pts
 
 
-                                    <div className="float-end">
-                                        <ProtectedAdminRoute>
-                                            <FaPencil onClick={() =>
-                                                window.location.href = `#/Kanbas/Courses/${assignment.course}/Assignments/${assignment._id}`}
-                                                className="text-primary me-3" />
-                                            {/*<FaTrash className="text-danger me-2 mb-1" onClick={() => dispatch(deleteAssignment(assignment._id))} /> */}
-                                            <FaTrash className="text-danger me-2 mb-1" onClick={() => { setDeleteWindow(true); setDeleteId(assignment._id); }} />
+                                <div className="float-end">
+                                    <ProtectedAdminRoute>
+                                        <FaPencil onClick={() =>
+                                            window.location.href = `#/Kanbas/Courses/${assignment.course}/Assignments/${assignment._id}`}
+                                            className="text-primary me-3" />
+                                        {/*<FaTrash className="text-danger me-2 mb-1" onClick={() => dispatch(deleteAssignment(assignment._id))} /> */}
+                                        <FaTrash className="text-danger me-2 mb-1" onClick={() => { setDeleteWindow(true); setDeleteId(assignment._id); }} />
 
 
-                                        </ProtectedAdminRoute>
-                                        <GreenCheckmark />
-                                        <IoEllipsisVertical className="fs-4" />
+                                    </ProtectedAdminRoute>
+                                    <GreenCheckmark />
+                                    <IoEllipsisVertical className="fs-4" />
+                                </div>
+                                {deleteWindow && assignment._id === deleteId && (
+                                    <div className="confirmation-dialog">
+                                        <p>Are you sure you want to delete this assignment?</p>
+                                        <button className="btn btn-success m-1" onClick={() => dispatch(deleteAssignment(assignment._id))}>Yes</button>
+                                        <button className="btn btn-danger m-1" onClick={() => setDeleteWindow(false)}>No</button>
                                     </div>
-                                    {deleteWindow && assignment._id === deleteId && (
-                                        <div className="confirmation-dialog">
-                                            <p>Are you sure you want to delete this assignment?</p>
-                                            <button className="btn btn-success m-1" onClick={() => dispatch(deleteAssignment(assignment._id))}>Yes</button>
-                                            <button className="btn btn-danger m-1" onClick={() => setDeleteWindow(false)}>No</button>
-                                        </div>
-                                    )}
+                                )}
 
-                                    { /*LessonControlButtons  /> */}  </li>
-                            ))}
+                                { /*LessonControlButtons  /> */}  </li>
+                        ))}
                     </ul>
                 </li>
             </ul>
