@@ -1,10 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 // import * as db from "./Database";
 import ProtectedAdminRoute from "./Account/ProtectedAdminRoute";
 import ProtectedStudentRoute from "./Account/ProtectedStudentRoute";
 import { addEnrollment, deleteEnrollment } from "./Courses/People/reducer";
+
+import * as courseClient from "./Courses/client";
 export default function Dashboard({ courses, course, setCourse, addNewCourse,
     deleteCourse, updateCourse }: {
         courses: any[]; course: any; setCourse: (course: any) => void;
@@ -18,6 +20,21 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
     const { currentUser } = useSelector((state: any) => state.accountReducer);
     const { enrollments } = useSelector((state: any) => state.enrollmentsReducer);
     const [changeEnrollments, setChangeEnrollments] = useState<boolean>(true);
+
+
+    const [allCourses, setAllCourses] = useState<any[]>([]);
+    const fetchAllCourses = async () => {
+        try {
+            const allCourses = await courseClient.fetchAllCourses();
+            setAllCourses(allCourses);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+    useEffect(() => {
+        fetchAllCourses();
+    });
+
 
     return (
         <div id="wd-dashboard">
@@ -91,7 +108,7 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
 
                 ) : (
                     <div className="row row-cols-1 row-cols-md-5 g-4">
-                        {courses.map((course) => (
+                        {allCourses.map((course) => (
                             <div className="wd-dashboard-course col" style={{ width: "300px" }}>
                                 <div className="card rounded-3 overflow-hidden">
                                     { /* <Link to={`/Kanbas/Courses/${course._id}/Home`} */}
