@@ -5,8 +5,10 @@ import { Link, useNavigate } from "react-router-dom";
 import ProtectedAdminRoute from "./Account/ProtectedAdminRoute";
 import ProtectedStudentRoute from "./Account/ProtectedStudentRoute";
 import { addEnrollment, deleteEnrollment } from "./Courses/People/reducer";
+import * as accountClient from "./Account/client"
 
 import * as courseClient from "./Courses/client";
+import * as enrollmentsClient from "./Courses/Enrollments/client";
 export default function Dashboard({ courses, course, setCourse, addNewCourse,
     deleteCourse, updateCourse }: {
         courses: any[]; course: any; setCourse: (course: any) => void;
@@ -21,6 +23,18 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
     const { enrollments } = useSelector((state: any) => state.enrollmentsReducer);
     const [changeEnrollments, setChangeEnrollments] = useState<boolean>(true);
 
+    const createEnrollments = async (userId: string, courseId: string) => {
+        const brandNewEnrollment = await enrollmentsClient.createEnrollment(courseId);
+        //dispatch(addEnrollment({ user: userId, course: courseId }));
+        dispatch(addEnrollment({ userId, courseId }));
+    }
+
+    const deleteEnrollments = async (userId: string, courseId: string) => {
+        const brandNewEnrollment = await enrollmentsClient.deleteEnrollment(courseId);
+        //dispatch(addEnrollment({ user: userId, course: courseId }));
+        dispatch(deleteEnrollment({ userId, courseId }));
+    }
+
 
     const [allCourses, setAllCourses] = useState<any[]>([]);
     const fetchAllCourses = async () => {
@@ -33,7 +47,8 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
     };
     useEffect(() => {
         fetchAllCourses();
-    });
+    },);
+
 
 
     return (
@@ -155,7 +170,8 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
                                                 onClick={() => {
                                                     let userId = currentUser._id;
                                                     let courseId = course._id;
-                                                    dispatch(deleteEnrollment({ user: userId, course: courseId }));
+                                                    //dispatch(deleteEnrollment({ user: userId, course: courseId }));
+                                                    deleteEnrollments(userId, courseId)
                                                 }}
                                                 className="btn btn-danger me-2 float-end" >
                                                 Unenroll
@@ -166,7 +182,10 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
                                                 onClick={() => {
                                                     let userId = currentUser._id;
                                                     let courseId = course._id;
-                                                    dispatch(addEnrollment({ user: userId, course: courseId }));
+                                                    //dispatch(addEnrollment({ user: userId, course: courseId }));
+                                                    createEnrollments(userId, courseId);
+                                                    // For visual change
+                                                    dispatch(addEnrollment({ userId, courseId }));
                                                 }}
                                                 className="btn btn-success me-2 float-end" >
                                                 Enroll
