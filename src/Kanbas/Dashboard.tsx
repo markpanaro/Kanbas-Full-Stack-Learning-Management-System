@@ -7,6 +7,7 @@ import ProtectedStudentRoute from "./Account/ProtectedStudentRoute";
 import { addEnrollment, deleteEnrollment } from "./Courses/People/reducer";
 import * as accountClient from "./Account/client"
 import { setEnrollments } from "./Courses/People/reducer";
+import * as userClient from "./Account/client"
 
 import * as courseClient from "./Courses/client";
 import * as enrollmentsClient from "./Courses/Enrollments/client";
@@ -39,21 +40,47 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
 
 
 
+    // Same data as passed variable courses
+    // but here was able to have courses refresh on enrollment updates
+    const [userCourses, setUserCourses] = useState<any[]>([]);
+    const fetchCourses = async () => {
+        try {
+            const userCourses = await userClient.findMyCourses();
+            setUserCourses(userCourses);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+    useEffect(() => {
+        fetchCourses();
+    }, [enrollments, currentUser]);
+
+
+
+
+
     const createEnrollments = async (userId: string, courseId: string) => {
         try {
             dispatch(addEnrollment({ userId, courseId }));
             const brandNewEnrollment = await enrollmentsClient.createEnrollment(courseId);
             //dispatch(addEnrollment({ user: userId, course: courseId }));
             dispatch(addEnrollment({ userId, courseId }));
+            fetchCourses();
         } catch (error) {
             console.error("Error creating enrollment:", error);
         }
     }
 
     const deleteEnrollments = async (userId: string, courseId: string) => {
-        const brandNewEnrollment = await enrollmentsClient.deleteEnrollment(courseId);
-        //dispatch(addEnrollment({ user: userId, course: courseId }));
-        dispatch(deleteEnrollment({ userId, courseId }));
+        try {
+            const brandNewEnrollment = await enrollmentsClient.deleteEnrollment(courseId);
+            //dispatch(addEnrollment({ user: userId, course: courseId }));
+            dispatch(deleteEnrollment({ userId, courseId }));
+            fetchEnrollments();
+            fetchCourses();
+        } catch (error) {
+            console.error("Error deleting enrollment:", error);
+        }
     }
 
 
@@ -82,7 +109,7 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
                     onChange={(e) => setCourse({ ...course, name: e.target.value })} />
                 <textarea defaultValue={course.description} className="form-control"
                     onChange={(e) => setCourse({ ...course, description: e.target.value })} />
-                <h2 id="wd-dashboard-published">Published Courses ({courses.length})</h2> <hr />
+                <h2 id="wd-dashboard-published">Published Courses ({userCourses.length})</h2> <hr /> {/* was courses */}
                 <h5>New Course
                     <button className="btn btn-primary float-end"
                         id="wd-add-new-course-click"
@@ -104,7 +131,8 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
                 {changeEnrollments ? (
 
                     <div className="row row-cols-1 row-cols-md-5 g-4">
-                        {courses.map((course) => (
+                        {/* was courses */}
+                        {userCourses.map((course) => (
                             <div className="wd-dashboard-course col" style={{ width: "300px" }}>
                                 <div className="card rounded-3 overflow-hidden">
                                     <Link to={`/Kanbas/Courses/${course._id}/Home`}
@@ -193,6 +221,7 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
                                                     let courseId = course._id;
                                                     //dispatch(deleteEnrollment({ user: userId, course: courseId }));
                                                     deleteEnrollments(userId, courseId)
+                                                    dispatch(deleteEnrollment({ userId, courseId }));
                                                 }}
                                                 className="btn btn-danger me-2 float-end" >
                                                 Unenroll
@@ -207,7 +236,7 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
                                                     //dispatch(addEnrollment({ user: userId, course: courseId }));
                                                     createEnrollments(userId, courseId);
                                                     // For visual change
-                                                    dispatch(addEnrollment( {userId, courseId} ));
+                                                    dispatch(addEnrollment({ userId, courseId }));
                                                 }}
                                                 className="btn btn-success me-2 float-end" >
                                                 Enroll
