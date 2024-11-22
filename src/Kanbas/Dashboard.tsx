@@ -12,41 +12,45 @@ import * as userClient from "./Account/client"
 import * as courseClient from "./Courses/client";
 import * as enrollmentsClient from "./Courses/Enrollments/client";
 export default function Dashboard({ courses, course, setCourse, addNewCourse,
-    deleteCourse, updateCourse }: {
+    deleteCourse, updateCourse, createEnrollments, deleteEnrollments, enrollments }: {
         courses: any[]; course: any; setCourse: (course: any) => void;
         addNewCourse: () => void; deleteCourse: (course: any) => void;
-        updateCourse: () => void;
+        createEnrollments: (userId: string, courseId: string) => void;
+        deleteEnrollments: (userId: string, courseId: string) => void;
+        updateCourse: () => void; enrollments: any[];
     }) {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const { currentUser } = useSelector((state: any) => state.accountReducer);
-    const { enrollments } = useSelector((state: any) => state.enrollmentsReducer);
+    //const { enrollments } = useSelector((state: any) => state.enrollmentsReducer);
     const [changeEnrollments, setChangeEnrollments] = useState<boolean>(true);
 
 
 
 
-
+    /*
     const fetchEnrollments = async () => {
         const enrollments = await enrollmentsClient.fetchEnrollments();
         dispatch(setEnrollments(enrollments));
     };
     useEffect(() => {
         fetchEnrollments();
-    },);
-
+    },[enrollments]);
+    */
 
 
 
     // Same data as passed variable courses
     // but here was able to have courses refresh on enrollment updates
+    /*
     const [userCourses, setUserCourses] = useState<any[]>([]);
     const fetchCourses = async () => {
         try {
             const userCourses = await userClient.findMyCourses();
             setUserCourses(userCourses);
+            //fetchEnrollments();
         } catch (error) {
             console.error(error);
         }
@@ -54,51 +58,56 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
     useEffect(() => {
         fetchCourses();
     }, [enrollments, currentUser]);
+    */
 
 
 
 
-
-    const createEnrollments = async (userId: string, courseId: string) => {
-        try {
-            dispatch(addEnrollment({ userId, courseId }));
-            const brandNewEnrollment = await enrollmentsClient.createEnrollment(courseId);
-            //dispatch(addEnrollment({ user: userId, course: courseId }));
-            dispatch(addEnrollment({ userId, courseId }));
-            // faster
-            fetchCourses();
-        } catch (error) {
-            console.error("Error creating enrollment:", error);
+    /*
+        const createEnrollments = async (userId: string, courseId: string) => {
+            try {
+                dispatch(addEnrollment({ userId, courseId }));
+                const brandNewEnrollment = await enrollmentsClient.createEnrollment(courseId);
+                //dispatch(addEnrollment({ user: userId, course: courseId }));
+                dispatch(addEnrollment({ userId, courseId }));
+                // faster
+                //fetchCourses();
+                //fetchEnrollments();
+                fetchAllCourses();
+            } catch (error) {
+                console.error("Error creating enrollment:", error);
+            }
         }
-    }
-
-    const deleteEnrollments = async (userId: string, courseId: string) => {
-        try {
-            const brandNewEnrollment = await enrollmentsClient.deleteEnrollment(courseId);
-            //dispatch(addEnrollment({ user: userId, course: courseId }));
-            dispatch(deleteEnrollment({ userId, courseId }));
-            //fetchEnrollments();
-            // faster
-            fetchCourses();
-        } catch (error) {
-            console.error("Error deleting enrollment:", error);
-        }
-    }
-
-
-    const [allCourses, setAllCourses] = useState<any[]>([]);
-    const fetchAllCourses = async () => {
-        try {
-            const allCourses = await courseClient.fetchAllCourses();
-            setAllCourses(allCourses);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-    useEffect(() => {
-        fetchAllCourses();
-    },);
-
+    */
+    /*
+     const deleteEnrollments = async (userId: string, courseId: string) => {
+         try {
+             const brandNewEnrollment = await enrollmentsClient.deleteEnrollment(courseId);
+             //dispatch(addEnrollment({ user: userId, course: courseId }));
+             dispatch(deleteEnrollment({ userId, courseId }));
+             //fetchEnrollments();
+             // faster
+             //fetchCourses();
+             //fetchAllCourses();
+         } catch (error) {
+             console.error("Error deleting enrollment:", error);
+         }
+     }
+    */
+    
+        const [allCourses, setAllCourses] = useState<any[]>([]);
+        const fetchAllCourses = async () => {
+            try {
+                const allCourses = await courseClient.fetchAllCourses();
+                setAllCourses(allCourses);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        useEffect(() => {
+            fetchAllCourses();
+        }, [courses, allCourses, enrollments]);
+    
 
 
     return (
@@ -111,7 +120,7 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
                     onChange={(e) => setCourse({ ...course, name: e.target.value })} />
                 <textarea defaultValue={course.description} className="form-control"
                     onChange={(e) => setCourse({ ...course, description: e.target.value })} />
-                <h2 id="wd-dashboard-published">Published Courses ({userCourses.length})</h2> <hr /> {/* was courses */}
+                <h2 id="wd-dashboard-published">Published Courses ({courses.length})</h2> <hr /> {/* was courses */}
                 <h5>New Course
                     <button className="btn btn-primary float-end"
                         id="wd-add-new-course-click"
@@ -134,7 +143,7 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
 
                     <div className="row row-cols-1 row-cols-md-5 g-4">
                         {/* was courses */}
-                        {userCourses.map((course) => (
+                        {courses.map((course) => (
                             <div className="wd-dashboard-course col" style={{ width: "300px" }}>
                                 <div className="card rounded-3 overflow-hidden">
                                     <Link to={`/Kanbas/Courses/${course._id}/Home`}
@@ -222,8 +231,10 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
                                                     let userId = currentUser._id;
                                                     let courseId = course._id;
                                                     //dispatch(deleteEnrollment({ user: userId, course: courseId }));
+                                                    dispatch(deleteEnrollment({ userId, courseId }));
                                                     deleteEnrollments(userId, courseId)
                                                     dispatch(deleteEnrollment({ userId, courseId }));
+                                                    fetchAllCourses();
                                                 }}
                                                 className="btn btn-danger me-2 float-end" >
                                                 Unenroll
@@ -239,6 +250,7 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
                                                     createEnrollments(userId, courseId);
                                                     // For visual change
                                                     dispatch(addEnrollment({ userId, courseId }));
+                                                    //fetchAllCourses();
                                                 }}
                                                 className="btn btn-success me-2 float-end" >
                                                 Enroll
