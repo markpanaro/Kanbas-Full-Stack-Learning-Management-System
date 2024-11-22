@@ -25,20 +25,19 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
 
     const { currentUser } = useSelector((state: any) => state.accountReducer);
     const [changeEnrollments, setChangeEnrollments] = useState<boolean>(true);
-    
-        const [allCourses, setAllCourses] = useState<any[]>([]);
-        const fetchAllCourses = async () => {
-            try {
-                const allCourses = await courseClient.fetchAllCourses();
-                setAllCourses(allCourses);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-        useEffect(() => {
-            fetchAllCourses();
-        }, [courses, allCourses, enrollments]);
-    
+
+    const [allCourses, setAllCourses] = useState<any[]>([]);
+    const fetchAllCourses = async () => {
+        try {
+            const allCourses = await courseClient.fetchAllCourses();
+            setAllCourses(allCourses);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+    useEffect(() => {
+        fetchAllCourses();
+    }, [courses, allCourses, enrollments]);
 
 
     return (
@@ -155,8 +154,9 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
                                         </ProtectedAdminRoute>
 
                                         {enrollments.some((enrollment: any) =>
-                                            enrollment.user === currentUser._id &&
-                                            enrollment.course === course._id) ? (
+
+                                            currentUser._id === enrollment.user &&
+                                            course._id === enrollment.course) ? (
                                             <button id="wd-enroll-course-click"
                                                 onClick={() => {
                                                     let userId = currentUser._id;
