@@ -11,11 +11,13 @@ import * as userClient from "./Account/client";
 // import { Provider } from "react-redux";
 import ProtectedRoute from "./Account/ProtectedRoute";
 import Session from "./Account/Session";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as courseClient from "./Courses/client";
 import * as enrollmentsClient from "./Courses/Enrollments/client";
+import { setEnrollments } from "./Courses/People/reducer";
 
 export default function Kanbas() {
+    const dispatch = useDispatch();
     const [courses, setCourses] = useState<any[]>([]);
     const { currentUser } = useSelector((state: any) => state.accountReducer);
     const { enrollments } = useSelector((state: any) => state.enrollmentsReducer);
@@ -57,6 +59,7 @@ export default function Kanbas() {
     };
 
 
+
     const createEnrollments = async (userId: string, courseId: string) => {
         try {
             const brandNewEnrollment = await enrollmentsClient.createEnrollment(courseId);
@@ -72,11 +75,14 @@ export default function Kanbas() {
         }
     }
     const fetchEnrollments = async () => {
-        await enrollmentsClient.fetchEnrollments();
+        const fetchedEnrollments = await enrollmentsClient.fetchEnrollments();
+        dispatch(setEnrollments(fetchedEnrollments));
     };
     useEffect(() => {
         fetchEnrollments();
     }, [enrollments, courses, currentUser]);
+
+    console.log("ENROLLMENTS", enrollments)
 
     return (
         // <Provider store={store}>
