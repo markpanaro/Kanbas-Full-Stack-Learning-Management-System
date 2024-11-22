@@ -4,11 +4,6 @@ const initialState = {
     enrollments: enrollments, //[],
 };
 
-interface Enrollment {
-    user: string,
-    course: string,
-}
-
 const enrollmentsSlice = createSlice({
     name: "enrollments",
     initialState,
