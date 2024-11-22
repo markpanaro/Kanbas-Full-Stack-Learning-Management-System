@@ -6,6 +6,7 @@ import ProtectedAdminRoute from "./Account/ProtectedAdminRoute";
 import ProtectedStudentRoute from "./Account/ProtectedStudentRoute";
 import { addEnrollment, deleteEnrollment } from "./Courses/People/reducer";
 import * as accountClient from "./Account/client"
+import { setEnrollments } from "./Courses/People/reducer";
 
 import * as courseClient from "./Courses/client";
 import * as enrollmentsClient from "./Courses/Enrollments/client";
@@ -23,10 +24,30 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
     const { enrollments } = useSelector((state: any) => state.enrollmentsReducer);
     const [changeEnrollments, setChangeEnrollments] = useState<boolean>(true);
 
+
+
+
+
+    const fetchEnrollments = async () => {
+        const enrollments = await enrollmentsClient.fetchEnrollments();
+        dispatch(setEnrollments(enrollments));
+    };
+    useEffect(() => {
+        fetchEnrollments();
+    },);
+
+
+
+
     const createEnrollments = async (userId: string, courseId: string) => {
-        const brandNewEnrollment = await enrollmentsClient.createEnrollment(courseId);
-        //dispatch(addEnrollment({ user: userId, course: courseId }));
-        dispatch(addEnrollment({ userId, courseId }));
+        try {
+            dispatch(addEnrollment({ userId, courseId }));
+            const brandNewEnrollment = await enrollmentsClient.createEnrollment(courseId);
+            //dispatch(addEnrollment({ user: userId, course: courseId }));
+            dispatch(addEnrollment({ userId, courseId }));
+        } catch (error) {
+            console.error("Error creating enrollment:", error);
+        }
     }
 
     const deleteEnrollments = async (userId: string, courseId: string) => {
@@ -182,10 +203,11 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
                                                 onClick={() => {
                                                     let userId = currentUser._id;
                                                     let courseId = course._id;
+                                                    console.log("USERNAME", userId)
                                                     //dispatch(addEnrollment({ user: userId, course: courseId }));
                                                     createEnrollments(userId, courseId);
                                                     // For visual change
-                                                    dispatch(addEnrollment({ userId, courseId }));
+                                                    dispatch(addEnrollment( {userId, courseId} ));
                                                 }}
                                                 className="btn btn-success me-2 float-end" >
                                                 Enroll
