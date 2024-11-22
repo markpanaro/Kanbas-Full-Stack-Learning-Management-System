@@ -175,29 +175,8 @@ export default function AssignmentEditor() {
                 onClick={async () => {
                     if (createAssignmentFlag) {
                         createAssignmentForCourse();
-                        /*
-                        dispatch(addAssignment({
-                            title: assignmentName,
-                            course: cid,
-                            _id: assignmentID,
-                            available_raw: assignmentAvailable,
-                            due_raw: assignmentDue,
-                            points: assignmentPoints,
-                            description: assignmentDesc,
-                        })) */
                     } else {
                         saveAssignment()
-                        /*
-                        dispatch(updateAssignment({
-                            title: assignmentName,
-                            course: cid,
-                            _id: assignmentID,
-                            available_raw: assignmentAvailable,
-                            due_raw: assignmentDue,
-                            points: assignmentPoints,
-                            description: assignmentDesc,
-                        }))
-                            */
                     }
                     ;
                     window.location.href = `#/Kanbas/Courses/${cid}/Assignments/`;

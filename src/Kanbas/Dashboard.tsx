@@ -65,6 +65,7 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
             const brandNewEnrollment = await enrollmentsClient.createEnrollment(courseId);
             //dispatch(addEnrollment({ user: userId, course: courseId }));
             dispatch(addEnrollment({ userId, courseId }));
+            // faster
             fetchCourses();
         } catch (error) {
             console.error("Error creating enrollment:", error);
@@ -76,7 +77,8 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
             const brandNewEnrollment = await enrollmentsClient.deleteEnrollment(courseId);
             //dispatch(addEnrollment({ user: userId, course: courseId }));
             dispatch(deleteEnrollment({ userId, courseId }));
-            fetchEnrollments();
+            //fetchEnrollments();
+            // faster
             fetchCourses();
         } catch (error) {
             console.error("Error deleting enrollment:", error);

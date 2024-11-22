@@ -26,20 +26,6 @@ export default function Assignments() {
 
     {/*const assignments = db.assignments;*/ }
 
-    /*
-    interface Assignment {
-        _id: string;
-        title: string;
-        course: string;
-        available: string;
-        due: string;
-        points: number;
-        available_raw: string;
-        due_raw: string;
-        description: string;
-    }
-        */
-
     const removeAssignment = async (assignmentId: string) => {
         await assignmentsClient.removeAssignment(assignmentId);
         dispatch(deleteAssignment(assignmentId));
