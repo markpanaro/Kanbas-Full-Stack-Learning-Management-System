@@ -57,17 +57,9 @@ export default function Kanbas() {
     };
 
 
-
     const createEnrollments = async (userId: string, courseId: string) => {
         try {
-            //dispatch(addEnrollment({ userId, courseId }));
             const brandNewEnrollment = await enrollmentsClient.createEnrollment(courseId);
-            //dispatch(addEnrollment({ user: userId, course: courseId }));
-            //dispatch(addEnrollment({ userId, courseId }));
-            // faster
-            //fetchCourses();
-            //fetchEnrollments();
-            //fetchAllCourses();
         } catch (error) {
             console.error("Error creating enrollment:", error);
         }
@@ -75,40 +67,17 @@ export default function Kanbas() {
     const deleteEnrollments = async (userId: string, courseId: string) => {
         try {
             const brandNewEnrollment = await enrollmentsClient.deleteEnrollment(courseId);
-            //dispatch(addEnrollment({ user: userId, course: courseId }));
-            //dispatch(deleteEnrollment({ userId, courseId }));
-            //fetchEnrollments();
-            // faster
-            //fetchCourses();
-            //fetchAllCourses();
         } catch (error) {
             console.error("Error deleting enrollment:", error);
         }
     }
-    //const { enrollments } = useSelector((state: any) => state.enrollmentsReducer);
     const fetchEnrollments = async () => {
-        //const enrollments = await enrollmentsClient.fetchEnrollments();
         await enrollmentsClient.fetchEnrollments();
-        //dispatch(setEnrollments(enrollments));
     };
     useEffect(() => {
         fetchEnrollments();
     }, [enrollments, courses, currentUser]);
 
-/*
-    const [allCourses, setAllCourses] = useState<any[]>([]);
-    const fetchAllCourses = async () => {
-        try {
-            const allCourses = await courseClient.fetchAllCourses();
-            setAllCourses(allCourses);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-    useEffect(() => {
-        fetchAllCourses();
-    }, [courses, allCourses, enrollments, currentUser]);
-*/
     return (
         // <Provider store={store}>
         <Session>
@@ -120,7 +89,6 @@ export default function Kanbas() {
                         <Route path="/Account/*" element={<Account />} />
                         <Route path="/Dashboard" element={<ProtectedRoute><Dashboard
                             courses={courses}
-                            //allCourses={allCourses}
                             course={course}
                             setCourse={setCourse}
                             addNewCourse={addNewCourse}

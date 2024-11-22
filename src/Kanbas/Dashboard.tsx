@@ -24,76 +24,7 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
     const navigate = useNavigate();
 
     const { currentUser } = useSelector((state: any) => state.accountReducer);
-    //const { enrollments } = useSelector((state: any) => state.enrollmentsReducer);
     const [changeEnrollments, setChangeEnrollments] = useState<boolean>(true);
-
-
-
-
-    /*
-    const fetchEnrollments = async () => {
-        const enrollments = await enrollmentsClient.fetchEnrollments();
-        dispatch(setEnrollments(enrollments));
-    };
-    useEffect(() => {
-        fetchEnrollments();
-    },[enrollments]);
-    */
-
-
-
-    // Same data as passed variable courses
-    // but here was able to have courses refresh on enrollment updates
-    /*
-    const [userCourses, setUserCourses] = useState<any[]>([]);
-    const fetchCourses = async () => {
-        try {
-            const userCourses = await userClient.findMyCourses();
-            setUserCourses(userCourses);
-            //fetchEnrollments();
-        } catch (error) {
-            console.error(error);
-        }
-    };
-    useEffect(() => {
-        fetchCourses();
-    }, [enrollments, currentUser]);
-    */
-
-
-
-
-    /*
-        const createEnrollments = async (userId: string, courseId: string) => {
-            try {
-                dispatch(addEnrollment({ userId, courseId }));
-                const brandNewEnrollment = await enrollmentsClient.createEnrollment(courseId);
-                //dispatch(addEnrollment({ user: userId, course: courseId }));
-                dispatch(addEnrollment({ userId, courseId }));
-                // faster
-                //fetchCourses();
-                //fetchEnrollments();
-                fetchAllCourses();
-            } catch (error) {
-                console.error("Error creating enrollment:", error);
-            }
-        }
-    */
-    /*
-     const deleteEnrollments = async (userId: string, courseId: string) => {
-         try {
-             const brandNewEnrollment = await enrollmentsClient.deleteEnrollment(courseId);
-             //dispatch(addEnrollment({ user: userId, course: courseId }));
-             dispatch(deleteEnrollment({ userId, courseId }));
-             //fetchEnrollments();
-             // faster
-             //fetchCourses();
-             //fetchAllCourses();
-         } catch (error) {
-             console.error("Error deleting enrollment:", error);
-         }
-     }
-    */
     
         const [allCourses, setAllCourses] = useState<any[]>([]);
         const fetchAllCourses = async () => {
@@ -230,7 +161,6 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
                                                 onClick={() => {
                                                     let userId = currentUser._id;
                                                     let courseId = course._id;
-                                                    //dispatch(deleteEnrollment({ user: userId, course: courseId }));
                                                     dispatch(deleteEnrollment({ userId, courseId }));
                                                     deleteEnrollments(userId, courseId)
                                                     dispatch(deleteEnrollment({ userId, courseId }));
@@ -246,11 +176,9 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
                                                     let userId = currentUser._id;
                                                     let courseId = course._id;
                                                     console.log("USERNAME", userId)
-                                                    //dispatch(addEnrollment({ user: userId, course: courseId }));
                                                     createEnrollments(userId, courseId);
                                                     // For visual change
                                                     dispatch(addEnrollment({ userId, courseId }));
-                                                    //fetchAllCourses();
                                                 }}
                                                 className="btn btn-success me-2 float-end" >
                                                 Enroll
