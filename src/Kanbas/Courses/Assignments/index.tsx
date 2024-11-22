@@ -12,6 +12,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { IoEllipsisVertical } from "react-icons/io5";
 import { useEffect, useState } from "react";
 import * as coursesClient from "../../Courses/client"
+import * as assignmentsClient from "./client"
 
 export default function Assignments() {
 
@@ -20,6 +21,9 @@ export default function Assignments() {
     const { assignments } = useSelector((state: any) => state.assignmentsReducer);
     let [deleteWindow, setDeleteWindow] = useState(false);
     let [deleteId, setDeleteId] = useState("");
+
+    //let assignmentID = assignment.id;
+
     {/*const assignments = db.assignments;*/ }
 
     /*
@@ -36,10 +40,16 @@ export default function Assignments() {
     }
         */
 
+    const removeAssignment = async (assignmentId: string) => {
+        await assignmentsClient.removeAssignment(assignmentId);
+        dispatch(deleteAssignment(assignmentId));
+    };
+
+
     const fetchAssignments = async () => {
         const assignments = await coursesClient.findAssignmentsForCourse(cid as string);
         dispatch(setAssignments(assignments));
-    };  
+    };
     useEffect(() => {
         fetchAssignments();
     }, []);
@@ -107,7 +117,7 @@ export default function Assignments() {
                                 {deleteWindow && assignment._id === deleteId && (
                                     <div className="confirmation-dialog">
                                         <p>Are you sure you want to delete this assignment?</p>
-                                        <button className="btn btn-success m-1" onClick={() => dispatch(deleteAssignment(assignment._id))}>Yes</button>
+                                        <button className="btn btn-success m-1" onClick={() => removeAssignment(assignment._id)/*dispatch(deleteAssignment(assignment._id))*/}>Yes</button>
                                         <button className="btn btn-danger m-1" onClick={() => setDeleteWindow(false)}>No</button>
                                     </div>
                                 )}
