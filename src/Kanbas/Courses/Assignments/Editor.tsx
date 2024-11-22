@@ -5,6 +5,7 @@ import { addAssignment, deleteAssignment, updateAssignment }
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import * as coursesClient from "../../Courses/client"
+import * as assignmentsClient from "../../Courses/Assignments/client"
 
 export default function AssignmentEditor() {
     const { pathname } = useLocation();
@@ -30,6 +31,23 @@ export default function AssignmentEditor() {
         const assignment = await coursesClient.createAssignmentForCourse(cid, newAssignment);
         dispatch(addAssignment(assignment));
     };
+
+    const saveAssignment = async () => {
+        /*
+        await assignmentsClient.saveAssignment(assignment);
+        dispatch(updateAssignment(assignment));
+        */
+        const newAssignment = {
+            title: assignmentName, course: cid, _id: assignmentID,
+            available_raw: assignmentAvailable,
+            due_raw: assignmentDue,
+            points: assignmentPoints,
+            description: assignmentDesc,
+        };
+        const assignment = await assignmentsClient.saveAssignment(newAssignment);
+        dispatch(updateAssignment(assignment));
+    };
+
 
     let createAssignmentFlag = false;
     if (assignmentID === "new") {
@@ -168,6 +186,8 @@ export default function AssignmentEditor() {
                             description: assignmentDesc,
                         })) */
                     } else {
+                        saveAssignment()
+                        /*
                         dispatch(updateAssignment({
                             title: assignmentName,
                             course: cid,
@@ -177,6 +197,7 @@ export default function AssignmentEditor() {
                             points: assignmentPoints,
                             description: assignmentDesc,
                         }))
+                            */
                     }
                     ;
                     window.location.href = `#/Kanbas/Courses/${cid}/Assignments/`;
