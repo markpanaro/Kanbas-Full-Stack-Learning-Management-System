@@ -53,6 +53,9 @@ body * {
 .right-justify {
     text-align: right;
 }
+.center-justify {
+    text-align: center;
+}
 
 .left-text-margin {
     margin-left: 2em;
