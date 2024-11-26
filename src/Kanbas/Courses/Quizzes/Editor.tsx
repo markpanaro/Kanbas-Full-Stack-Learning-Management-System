@@ -103,6 +103,8 @@ export default function AssignmentEditor() {
             points: questionPoints,
             choices: choices,
 
+            _id: new Date().toISOString(),
+
         };
         setQuizQuestions([...quizQuestions, newQuestion]);
 

@@ -88,7 +88,7 @@ export default function Quizzes() {
                         {quizzes.map((quiz: any) => (
                             <li className="wd-lesson list-group-item p-3 ps-5">
                                 <a className="wd-assignment-link"
-                                    href={`#/Kanbas/Courses/${quiz.course}/Quizzes/${quiz._id}`}>
+                                    href={`#/Kanbas/Courses/${quiz.course}/Quizzes/${quiz._id}/details`}>
                                     {quiz.title}
                                 </a>
                                 <br /><span className="red-text">Multiple Modules</span> | <b>Not available until </b> {quiz.available || quiz.available_raw} |<br />
