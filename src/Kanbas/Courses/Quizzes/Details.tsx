@@ -94,7 +94,7 @@ export default function Quizzes() {
             <button id="wd-save"
                 onClick={async () => {
                     { saveGrade() };
-                    //window.location.href = `#/Kanbas/Courses/${cid}/Quizzes/`;
+                    window.location.href = `#/Kanbas/Courses/${cid}/Grades/`;
                 }} type="button"
                 className="btn btn-danger w-10">
                 Save</button>

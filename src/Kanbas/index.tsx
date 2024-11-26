@@ -82,7 +82,7 @@ export default function Kanbas() {
         fetchEnrollments();
     }, [enrollments, courses, currentUser]);
 
-    console.log("ENROLLMENTS", enrollments)
+    //console.log("ENROLLMENTS", enrollments)
 
     return (
         // <Provider store={store}>
