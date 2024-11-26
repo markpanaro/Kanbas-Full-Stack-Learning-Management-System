@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import * as coursesClient from "../../Courses/client"
 import { setQuizzes, deleteQuiz, addQuiz } from "../Quizzes/reducer";
+import * as gradesClient from "../Grades/client";
 
 export default function Quizzes() {
     const { currentUser } = useSelector((state: any) => state.accountReducer);
@@ -31,15 +32,25 @@ export default function Quizzes() {
         fetchQuizzes();
     }, []);
 
-    const changeAnswer = (questionId: string, index: number) => {        
+    const changeAnswer = (questionId: string, index: number) => {
         const isCorrect = quiz.questions
-        .find((question: any) => question._id === questionId)
-        ?.choices[index]?.isCorrect || false;
-        
+            .find((question: any) => question._id === questionId)
+            ?.choices[index]?.isCorrect || false;
+
         setAnswers({
             ...answers,
             [questionId]: [index, isCorrect]
         });
+    };
+
+    const saveGrade = async () => {
+        const newGrade = {
+            quizId: quizId,
+            answers: answers,
+            user: currentUser._id,
+        };
+        const grade = await gradesClient.saveGrade(newGrade);
+        //dispatch(updateAssignment(assignment));
     };
 
     return (
@@ -78,6 +89,16 @@ export default function Quizzes() {
                     </div>
                 ))}
             </div>
+            <pre>{JSON.stringify(answers, null, 2)}</pre>
+
+            <button id="wd-save"
+                onClick={async () => {
+                    { saveGrade() };
+                    //window.location.href = `#/Kanbas/Courses/${cid}/Quizzes/`;
+                }} type="button"
+                className="btn btn-danger w-10">
+                Save</button>
+
         </div>
     );
 }
