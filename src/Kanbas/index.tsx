@@ -21,18 +21,56 @@ export default function Kanbas() {
     const [courses, setCourses] = useState<any[]>([]);
     const { currentUser } = useSelector((state: any) => state.accountReducer);
     const { enrollments } = useSelector((state: any) => state.enrollmentsReducer);
-    const fetchCourses = async () => {
+    const [enrolling, setEnrolling] = useState<boolean>(false);
+    const findCoursesForUser = async () => {
         try {
-            //const courses = await userClient.findMyCourses();
-            const courses = await courseClient.fetchAllCourses();
+            const courses = await userClient.findCoursesForUser(currentUser._id);
             setCourses(courses);
         } catch (error) {
             console.error(error);
         }
     };
+    const fetchCourses = async () => {
+        try {
+            const allCourses = await courseClient.fetchAllCourses();
+            const enrolledCourses = await userClient.findCoursesForUser(
+                currentUser._id
+            );
+            const courses = allCourses.map((course: any) => {
+                if (enrolledCourses.find((c: any) => c._id === course._id)) {
+                    return { ...course, enrolled: true };
+                } else {
+                    return course;
+                }
+            });
+            setCourses(courses);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     useEffect(() => {
-        fetchCourses();
-    }, [courses, enrollments, currentUser]);
+        if (enrolling) {
+            fetchCourses();
+        } else {
+            findCoursesForUser();
+        }
+    }, [currentUser, enrolling]);
+
+    /*
+        const fetchCourses = async () => {
+            try {
+                //const courses = await userClient.findMyCourses();
+                const courses = await courseClient.fetchAllCourses();
+                setCourses(courses);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        useEffect(() => {
+            fetchCourses();
+        }, [courses, enrollments, currentUser]);
+    */
 
     const [course, setCourse] = useState<any>({
         _id: "1234", name: "New Course", number: "New Number",
@@ -85,6 +123,8 @@ export default function Kanbas() {
 
     //console.log("ENROLLMENTS", enrollments)
 
+
+
     return (
         // <Provider store={store}>
         <Session>
@@ -103,7 +143,9 @@ export default function Kanbas() {
                             updateCourse={updateCourse}
                             createEnrollments={createEnrollments}
                             deleteEnrollments={deleteEnrollments}
-                            enrollments={enrollments} /> </ProtectedRoute>} />
+                            enrollments={enrollments}
+                            enrolling={enrolling} 
+                            setEnrolling={setEnrolling} /> </ProtectedRoute>} />
                         { /* <Route path="/Courses/:cid/*" element={<Courses />} /> */}
                         <Route path="Courses/:cid/*" element={<ProtectedRoute><Courses courses={courses} /></ProtectedRoute>} />
                         <Route path="/Calendar" element={<h1>Calendar</h1>} />

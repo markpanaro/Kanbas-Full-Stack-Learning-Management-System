@@ -12,12 +12,13 @@ import * as userClient from "./Account/client"
 import * as courseClient from "./Courses/client";
 import * as enrollmentsClient from "./Courses/Enrollments/client";
 export default function Dashboard({ courses, course, setCourse, addNewCourse,
-    deleteCourse, updateCourse, createEnrollments, deleteEnrollments, enrollments }: {
+    deleteCourse, updateCourse, createEnrollments, deleteEnrollments, enrollments, enrolling, setEnrolling }: {
         courses: any[]; course: any; setCourse: (course: any) => void;
         addNewCourse: () => void; deleteCourse: (course: any) => void;
         createEnrollments: (userId: string, courseId: string) => void;
         deleteEnrollments: (userId: string, courseId: string) => void;
         updateCourse: () => void; enrollments: any[];
+        enrolling: boolean; setEnrolling: (enrolling: boolean) => void;
     }) {
 
     const dispatch = useDispatch();
@@ -63,9 +64,14 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
             </ProtectedAdminRoute>
 
             <ProtectedStudentRoute>
+                {/*
                 <button className="btn btn-primary float-end"
                     id="wd-enrollments-click"
                     onClick={() => setChangeEnrollments(change => !change)} > Enrollments </button>
+                */}
+                <button onClick={() => setEnrolling(!enrolling)} className="float-end btn btn-primary" >
+                    {enrolling ? "My Courses" : "All Courses"}
+                </button>
             </ProtectedStudentRoute>
 
             <div id="wd-dashboard-courses" className="row">
@@ -82,6 +88,13 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
                                         <img src={`/images/react.jpg`} width="100%" height={160} />
                                         <div className="card-body">
                                             <h5 className="wd-dashboard-course-title card-title">
+
+                                                {enrolling && (
+                                                    <button className={`btn ${course.enrolled ? "btn-danger" : "btn-success"} float-end`} >
+                                                        {course.enrolled ? "Unenroll" : "Enroll"}
+                                                    </button>
+                                                )}
+
                                                 {course.name} </h5>
                                             <p className="wd-dashboard-course-title card-text overflow-y-hidden" style={{ maxHeight: 100 }}>
                                                 {course.description} </p>
@@ -124,6 +137,13 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
                                     <img src={`/images/react.jpg`} width="100%" height={160} />
                                     <div className="card-body">
                                         <h5 className="wd-dashboard-course-title card-title">
+
+                                            {enrolling && (
+                                                <button className={`btn ${course.enrolled ? "btn-danger" : "btn-success"} float-end`} >
+                                                    {course.enrolled ? "Unenroll" : "Enroll"}
+                                                </button>
+                                            )}
+
                                             {course.name} </h5>
                                         <p className="wd-dashboard-course-title card-text overflow-y-hidden" style={{ maxHeight: 100 }}>
                                             {course.description} </p>
