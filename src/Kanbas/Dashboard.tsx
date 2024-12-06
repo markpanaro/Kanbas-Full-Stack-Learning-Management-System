@@ -12,13 +12,15 @@ import * as userClient from "./Account/client"
 import * as courseClient from "./Courses/client";
 import * as enrollmentsClient from "./Courses/Enrollments/client";
 export default function Dashboard({ courses, course, setCourse, addNewCourse,
-    deleteCourse, updateCourse, createEnrollments, deleteEnrollments, enrollments, enrolling, setEnrolling }: {
+    deleteCourse, updateCourse, createEnrollments, deleteEnrollments, enrollments,
+    enrolling, setEnrolling, updateEnrollment }: {
         courses: any[]; course: any; setCourse: (course: any) => void;
         addNewCourse: () => void; deleteCourse: (course: any) => void;
         createEnrollments: (userId: string, courseId: string) => void;
         deleteEnrollments: (userId: string, courseId: string) => void;
         updateCourse: () => void; enrollments: any[];
         enrolling: boolean; setEnrolling: (enrolling: boolean) => void;
+        updateEnrollment: (courseId: string, enrolled: boolean) => void
     }) {
 
     const dispatch = useDispatch();
@@ -90,7 +92,11 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
                                             <h5 className="wd-dashboard-course-title card-title">
 
                                                 {enrolling && (
-                                                    <button className={`btn ${course.enrolled ? "btn-danger" : "btn-success"} float-end`} >
+                                                    <button onClick={(event) => {
+                                                        event.preventDefault();
+                                                        updateEnrollment(course._id, !course.enrolled);
+                                                    }}
+                                                        className={`btn ${course.enrolled ? "btn-danger" : "btn-success"} float-end`} >
                                                         {course.enrolled ? "Unenroll" : "Enroll"}
                                                     </button>
                                                 )}
@@ -139,7 +145,11 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
                                         <h5 className="wd-dashboard-course-title card-title">
 
                                             {enrolling && (
-                                                <button className={`btn ${course.enrolled ? "btn-danger" : "btn-success"} float-end`} >
+                                                <button onClick={(event) => {
+                                                    event.preventDefault();
+                                                    updateEnrollment(course._id, !course.enrolled);
+                                                }}
+                                                    className={`btn ${course.enrolled ? "btn-danger" : "btn-success"} float-end`} >
                                                     {course.enrolled ? "Unenroll" : "Enroll"}
                                                 </button>
                                             )}
