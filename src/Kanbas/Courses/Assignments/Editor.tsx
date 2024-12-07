@@ -14,8 +14,8 @@ export default function AssignmentEditor() {
     const { cid } = useParams();
     let assignmentID = pathname.split("/")[5];
     const [assignmentName, setAssignmentName] = useState((assignments.find((assignment: any) => assignment._id === assignmentID))?.title);
-    const [assignmentAvailable, setAssignmentAvailable] = useState((assignments.find((assignment: any) => assignment._id === assignmentID))?.available_raw);
-    const [assignmentDue, setAssignmentDue] = useState((assignments.find((assignment: any) => assignment._id === assignmentID))?.due_raw);
+    const [assignmentAvailable, setAssignmentAvailable] = useState((assignments.find((assignment: any) => assignment._id === assignmentID))?.available); //available_raw
+    const [assignmentDue, setAssignmentDue] = useState((assignments.find((assignment: any) => assignment._id === assignmentID))?.due);  //due_raw
     const [assignmentPoints, setAssignmentPoints] = useState((assignments.find((assignment: any) => assignment._id === assignmentID))?.points);
     const [assignmentDesc, setAssignmentDesc] = useState((assignments.find((assignment: any) => assignment._id === assignmentID))?.description);
 
@@ -23,8 +23,10 @@ export default function AssignmentEditor() {
         if (!cid) return;
         const newAssignment = {
             title: assignmentName, course: cid, _id: assignmentID,
-            available_raw: assignmentAvailable,
-            due_raw: assignmentDue,
+            //available_raw: assignmentAvailable,
+            //due_raw: assignmentDue,
+            available: assignmentAvailable,
+            due: assignmentDue,
             points: assignmentPoints,
             description: assignmentDesc,
         };
@@ -39,8 +41,10 @@ export default function AssignmentEditor() {
         */
         const newAssignment = {
             title: assignmentName, course: cid, _id: assignmentID,
-            available_raw: assignmentAvailable,
-            due_raw: assignmentDue,
+            //available_raw: assignmentAvailable,
+            //due_raw: assignmentDue,
+            available: assignmentAvailable,
+            due: assignmentDue,
             points: assignmentPoints,
             description: assignmentDesc,
         };
