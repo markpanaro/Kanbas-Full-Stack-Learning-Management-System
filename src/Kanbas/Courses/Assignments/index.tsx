@@ -83,8 +83,8 @@ export default function Assignments() {
                                     href={`#/Kanbas/Courses/${assignment.course}/Assignments/${assignment._id}`}>
                                     {assignment.title}
                                 </a>
-                                <br /><span className="red-text">Multiple Modules</span> | <b>Not available until </b> {assignment.available || assignment.available_raw.toString()} |<br />
-                                <b>Due</b> {assignment.due || assignment.due_raw.toString()} | {assignment.points} pts
+                                <br /><span className="red-text">Multiple Modules</span> | <b>Not available until </b> {assignment.available} |<br />
+                                <b>Due</b> {assignment.due} | {assignment.points} pts
 
 
                                 <div className="float-end">
