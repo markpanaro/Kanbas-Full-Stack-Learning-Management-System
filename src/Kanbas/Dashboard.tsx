@@ -65,7 +65,7 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
                 </h5><hr />
             </ProtectedAdminRoute>
 
-            <ProtectedStudentRoute>
+            { /*<ProtectedStudentRoute> */}
                 {/*
                 <button className="btn btn-primary float-end"
                     id="wd-enrollments-click"
@@ -74,7 +74,7 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
                 <button onClick={() => setEnrolling(!enrolling)} className="float-end btn btn-primary" >
                     {enrolling ? "My Courses" : "All Courses"}
                 </button>
-            </ProtectedStudentRoute>
+            {/*</ProtectedStudentRoute> */}
 
             <div id="wd-dashboard-courses" className="row">
                 {changeEnrollments ? (

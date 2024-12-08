@@ -45,11 +45,16 @@ export default function Quizzes() {
 
     const saveGrade = async () => {
         const newGrade = {
-            quizId: quizId,
+            quiz: quizId,
             answers: answers,
             user: currentUser._id,
         };
+
         const grade = await gradesClient.saveGrade(newGrade);
+        //if (!grade) {
+        //    await gradesClient.saveGrade(newGrade);
+        //}
+        //const grade = await gradesClient.saveGrade(newGrade);
         //dispatch(updateAssignment(assignment));
     };
 

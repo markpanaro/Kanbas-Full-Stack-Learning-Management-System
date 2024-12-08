@@ -14,7 +14,15 @@ export const saveGrade = async (grade: any) => {
     return data;
 };
 
+/*
 export const updateGrade = async (grade: any) => {
-    const { data } = await axios.put(`${GRADES_API}/${grade._id}`, grade);
+    //const { data } = await axiosWithCredentials.put(`${GRADES_API}/${grade._id}`, grade);
+    const { data } = await axiosWithCredentials.put(`${GRADES_API}`, grade);
+    return data;
+};
+*/
+export const updateGrade = async (gradeId: any, grade: any) => {
+    //const { data } = await axiosWithCredentials.put(`${GRADES_API}/${grade._id}`, grade);
+    const { data } = await axiosWithCredentials.put(`${GRADES_API}`, gradeId, grade);
     return data;
 };
