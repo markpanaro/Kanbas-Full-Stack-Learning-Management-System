@@ -22,6 +22,7 @@ export default function Quizzes() {
     const quiz = quizzes.find((quiz: any) => quiz._id === quizId);
     const [quizQuestions, setQuizQuestions] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.questions || []);
     const [answers, setAnswers] = useState<{ [key: string]: [number, string] }>({});
+    const [currentScore, setCurrentScore] = useState(0);
 
 
     const fetchQuizzes = async () => {
@@ -33,9 +34,34 @@ export default function Quizzes() {
     }, []);
 
     const changeAnswer = (questionId: string, index: number) => {
-        const isCorrect = quiz.questions
-            .find((question: any) => question._id === questionId)
-            ?.choices[index]?.isCorrect || false;
+        //const isCorrect = quiz.questions
+        //    .find((question: any) => question._id === questionId)
+        //    ?.choices[index]?.isCorrect || false;
+        const question = quiz.questions.find((question: any) => question._id === questionId);
+        const isCorrect = question?.choices[index]?.isCorrect || false;
+        const points = question?.points || 0;
+
+
+        const currentlyCorrect = answers[questionId]?.[1];
+
+        //const isCorrectTest = question?.choices[index]?.isCorrect || false;
+        
+        
+
+        if (isCorrect) {            
+            setCurrentScore(currentScore + points);
+        } else if (currentlyCorrect && !isCorrect) {
+            setCurrentScore(currentScore - points);
+        }
+             /*
+        if (currentlyCorrect && !isCorrect) {
+            setCurrentScore(currentScore - points);
+        } else if (!currentlyCorrect && isCorrect) {
+            setCurrentScore(currentScore + points);
+        } else if (isCorrect) {
+            setCurrentScore(currentScore + points);
+        }
+            */
 
         setAnswers({
             ...answers,
@@ -48,6 +74,7 @@ export default function Quizzes() {
             quiz: quizId,
             answers: answers,
             user: currentUser._id,
+            score: currentScore,
         };
         const existingGrade = await gradesClient.fetchGrade(quizId);
         const grade = await gradesClient.saveGrade(newGrade);
@@ -104,6 +131,7 @@ export default function Quizzes() {
                 ))}
             </div>
             <pre>{JSON.stringify(answers, null, 2)}</pre>
+            <pre>{JSON.stringify(currentScore, null, 2)}</pre>
 
             <button id="wd-save"
                 onClick={async () => {

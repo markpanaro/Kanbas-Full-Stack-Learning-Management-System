@@ -1,11 +1,14 @@
 import { useParams } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import { IoEllipsisVertical } from "react-icons/io5";
+import { FcCheckmark } from "react-icons/fc";
+import { RxCross2 } from "react-icons/rx";
 import { useEffect, useState } from "react";
 import * as coursesClient from "../../Courses/client"
 import * as quizzesClient from "../Quizzes/client"
 import { setQuizzes, deleteQuiz, addQuiz } from "../Quizzes/reducer";
 import * as gradesClient from "../Grades/client"
+
 
 
 export default function Grades() {
@@ -59,9 +62,9 @@ export default function Grades() {
 
 
                     {grades[quiz._id]?.map((grade: any) => (
-                        <div key={grade.id}> 
-                            
-                            
+                        <div key={grade.id}>
+
+
 
                             {/* 
                             {Object.entries(grade.answers).map((answer) => {
@@ -76,6 +79,8 @@ export default function Grades() {
                             })}
                             */}
 
+                            <b>Earned points: </b>{grade.score}<br/>
+                            <b>Questions:</b>
                             {Object.entries(grade.answers).map(([_id, answer]) => {
                                 //const [score, isCorrect] = answer;
                                 //const score = answer[0];
@@ -83,7 +88,7 @@ export default function Grades() {
                                 const [choice, isCorrect] = answer as Answer;
                                 return (
                                     <li >
-                                        Answer: {choice}, Correct: {isCorrect ? 'Yes' : 'No'}
+                                        Answer: {choice}, Correct?: {isCorrect ? <FcCheckmark /> : <RxCross2 style={{ color: "red" }} />}
                                     </li>
                                 );
                             })}
