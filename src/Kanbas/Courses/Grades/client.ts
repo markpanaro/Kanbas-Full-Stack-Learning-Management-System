@@ -3,9 +3,9 @@ const axiosWithCredentials = axios.create({ withCredentials: true });
 const REMOTE_SERVER = process.env.REACT_APP_REMOTE_SERVER;
 const GRADES_API = `${REMOTE_SERVER}/api/grades`;
 
-export const fetchGrade = async (quiz: any) => {
+export const fetchGrade = async (quizId: any) => {
     const response = await axiosWithCredentials
-        .get(`${GRADES_API}/${quiz._id}`);
+        .get(`${GRADES_API}/${quizId}`);
     return response.data;
 };
 

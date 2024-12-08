@@ -7,6 +7,7 @@ import * as quizzesClient from "../Quizzes/client"
 import { setQuizzes, deleteQuiz, addQuiz } from "../Quizzes/reducer";
 import * as gradesClient from "../Grades/client"
 
+
 export default function Grades() {
     const { cid } = useParams();
     const dispatch = useDispatch();
@@ -22,7 +23,7 @@ export default function Grades() {
         const fetchGrades = async () => {
             const gradesData: { [key: string]: any } = {};
             for (let quiz of quizzes) {
-                const grade = await gradesClient.fetchGrade(quiz);
+                const grade = await gradesClient.fetchGrade(quiz._id);
                 gradesData[quiz._id] = grade;
             }
             setGrades(gradesData);
@@ -31,7 +32,16 @@ export default function Grades() {
     };
     useEffect(() => {
         fetchQuizzes();
-    }, [quizzes]);
+    }, []);  //had quizzes before
+
+
+    const getGrade = async () => {
+        for (let quiz of quizzes) {
+            const grade = await gradesClient.fetchGrade(quiz._id);
+        }
+    };
+
+    type Answer = [number, boolean];
 
     return (
         <div id="wd-grades">
@@ -45,9 +55,48 @@ export default function Grades() {
                     <br /><span className="red-text">Multiple Modules</span> | <b>Not available until </b> {quiz.available || quiz.available_raw} |<br />
                     <b>Due</b> {quiz.due || quiz.due_raw} | {quiz.points} pts
 
-                    <pre>{JSON.stringify(grades[quiz._id], null, 2)}</pre>
+                    {/* <pre>{JSON.stringify(grades[quiz._id], null, 2)}</pre> */}
+
+
+                    {grades[quiz._id]?.map((grade: any) => (
+                        <div key={grade.id}> 
+                            
+                            
+
+                            {/* 
+                            {Object.entries(grade.answers).map((answer) => {
+                                //const [score, isCorrect] = answer;
+                                const score = answer[0];
+                                const isCorrect = answer[1];
+                            return (
+                            <li >
+                                Score: {score}, Correct: {isCorrect ? 'Yes' : 'No'}
+                            </li>
+                            );
+                            })}
+                            */}
+
+                            {Object.entries(grade.answers).map(([_id, answer]) => {
+                                //const [score, isCorrect] = answer;
+                                //const score = answer[0];
+                                //const isCorrect = answer[1];
+                                const [choice, isCorrect] = answer as Answer;
+                                return (
+                                    <li >
+                                        Answer: {choice}, Correct: {isCorrect ? 'Yes' : 'No'}
+                                    </li>
+                                );
+                            })}
+
+                        </div>
+                    ))}
+
+
                 </li>
+
+
             ))}
+
         </div>
     );
 }

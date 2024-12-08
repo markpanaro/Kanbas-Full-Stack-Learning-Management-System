@@ -49,8 +49,17 @@ export default function Quizzes() {
             answers: answers,
             user: currentUser._id,
         };
-
+        const existingGrade = await gradesClient.fetchGrade(quizId);
         const grade = await gradesClient.saveGrade(newGrade);
+
+        //const existingGrade = await gradesClient.fetchGrade();
+        //if (existingGrade._id) {
+        //    await gradesClient.updateGrade(existingGrade._id, newGrade);
+        //} else {
+        //    const grade = await gradesClient.saveGrade(newGrade);
+        //}
+
+        //const grade = await gradesClient.saveGrade(newGrade);
         //if (!grade) {
         //    await gradesClient.saveGrade(newGrade);
         //}
