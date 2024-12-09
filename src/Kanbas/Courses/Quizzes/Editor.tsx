@@ -166,6 +166,7 @@ export default function AssignmentEditor() {
             points: questionPoints,
             answers: fillInBlankAnswers, //.map(answer => answer.toLowerCase()),
             //choices: choices, // this is added for rendering purposes only, choices is expected to exist 
+            _id: new Date().toISOString(),
         };
 
         setQuizQuestions([...quizQuestions, newQuestion]);

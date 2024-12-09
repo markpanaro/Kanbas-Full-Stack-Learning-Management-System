@@ -45,27 +45,45 @@ export default function Quizzes() {
         const currentlyCorrect = answers[questionId]?.[1];
 
         //const isCorrectTest = question?.choices[index]?.isCorrect || false;
-        
-        
 
-        if (isCorrect) {            
+
+
+        if (isCorrect) {
             setCurrentScore(currentScore + points);
         } else if (currentlyCorrect && !isCorrect) {
             setCurrentScore(currentScore - points);
         }
-             /*
-        if (currentlyCorrect && !isCorrect) {
-            setCurrentScore(currentScore - points);
-        } else if (!currentlyCorrect && isCorrect) {
-            setCurrentScore(currentScore + points);
-        } else if (isCorrect) {
-            setCurrentScore(currentScore + points);
-        }
-            */
+        /*
+   if (currentlyCorrect && !isCorrect) {
+       setCurrentScore(currentScore - points);
+   } else if (!currentlyCorrect && isCorrect) {
+       setCurrentScore(currentScore + points);
+   } else if (isCorrect) {
+       setCurrentScore(currentScore + points);
+   }
+       */
 
         setAnswers({
             ...answers,
             [questionId]: [index, isCorrect]
+        });
+    };
+
+    const changeFillInTheBlankAnswer = (questionId: string, answer: string) => {
+        const question = quiz.questions.find((question: any) => question._id === questionId);
+        const isCorrect = question?.answers.includes(answer.trim().toLowerCase());
+        const points = question?.points || 0;
+        const currentlyCorrect = answers[questionId]?.[1];
+
+        if (isCorrect) {
+            setCurrentScore(currentScore + points);
+        } else if (currentlyCorrect && !isCorrect) {
+            setCurrentScore(currentScore - points);
+        }
+
+        setAnswers({
+            ...answers,
+            [questionId]: [-1, isCorrect],
         });
     };
 
@@ -113,20 +131,28 @@ export default function Quizzes() {
                     <div key={index} className="mb-3">
                         <h4>{question.title}</h4>
                         <p>Points: {question.points}</p>
-                        <ul>
-                            {question.choices.map((choice: any, index: any) => (
-                                <li key={index}>
-                                    <input
-                                        type="radio"
-                                        value={index}
-                                        checked={answers[question._id]?.[0] === index}
-                                        onChange={() => changeAnswer(question._id, index)
-                                        }
-                                    />
-                                    {choice.text}
-                                </li>
-                            ))}
-                        </ul>
+
+                        {question.answers.length > 0 ? (
+                            <input
+                                type="text"
+                                onChange={(e) => changeFillInTheBlankAnswer(question._id, e.target.value)}
+                            />
+                        ) : (
+                            <ul>
+                                {question.choices.map((choice: any, index: any) => (
+                                    <li key={index}>
+                                        <input
+                                            type="radio"
+                                            value={index}
+                                            checked={answers[question._id]?.[0] === index}
+                                            onChange={() => changeAnswer(question._id, index)
+                                            }
+                                        />
+                                        {choice.text}
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
                     </div>
                 ))}
             </div>
