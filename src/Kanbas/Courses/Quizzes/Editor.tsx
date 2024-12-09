@@ -108,10 +108,18 @@ export default function AssignmentEditor() {
             points: questionPoints,
             choices: choices,
 
-            _id: new Date().toISOString(),
+            //_id: new Date().toISOString(),
+            _id: updateQuestionIndex !== null ? quizQuestions[updateQuestionIndex]._id : new Date().toISOString(),
 
         };
-        setQuizQuestions([...quizQuestions, newQuestion]);
+        
+        const upsertQuestion = updateQuestionIndex !== null
+            ? quizQuestions.map((question: any, index: any) => index === updateQuestionIndex ? newQuestion : question)
+            : [...quizQuestions, newQuestion];
+
+        setQuizQuestions(upsertQuestion);
+
+        //setQuizQuestions([...quizQuestions, newQuestion]);
 
         // Reset fields
         setQuestionTitle('');
@@ -166,14 +174,34 @@ export default function AssignmentEditor() {
             points: questionPoints,
             answers: fillInBlankAnswers, //.map(answer => answer.toLowerCase()),
             //choices: choices, // this is added for rendering purposes only, choices is expected to exist 
-            _id: new Date().toISOString(),
+            
+            //_id: new Date().toISOString(),
+            _id: updateQuestionIndex !== null ? quizQuestions[updateQuestionIndex]._id : new Date().toISOString(),
         };
 
-        setQuizQuestions([...quizQuestions, newQuestion]);
+        const upsertQuestion = updateQuestionIndex !== null
+        ? quizQuestions.map((question: any, index: any) => index === updateQuestionIndex ? newQuestion : question)
+        : [...quizQuestions, newQuestion];
+
+        setQuizQuestions(upsertQuestion);
+
+        //setQuizQuestions([...quizQuestions, newQuestion]);
         setQuestionTitle('');
         setQuestionPoints(0);
         setFillInBlankAnswers(['']);
     };
+
+    // edit questions
+    const [updateQuestionIndex, setUpdateQuestionIndex] = useState<number | null>(null);
+
+    const updateQuestion = (index: number) => {
+        setUpdateQuestionIndex(index);
+        const question = quizQuestions[index];
+        setQuestionTitle(question.title);
+        setQuestionPoints(question.points);
+        setChoices(question.choices || []);
+        setFillInBlankAnswers(question.answers || []);
+    }
 
 
     return (
@@ -322,6 +350,7 @@ export default function AssignmentEditor() {
                                         </li>
                                     ))}
                                 </ul>
+                                <button onClick={() => updateQuestion(index)} className="btn btn-warning">Edit</button>
                             </div>
                         ))}
                     </div>
