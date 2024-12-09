@@ -146,6 +146,35 @@ export default function AssignmentEditor() {
 
     const [trueFalse, setTrueFalse] = useState([{ text: 'True', isCorrect: false }, { text: 'False', isCorrect: false }]);
 
+
+    // Fill in the blank questions
+    const [fillInBlankAnswers, setFillInBlankAnswers] = useState(['']);
+
+    const addFillInBlankAnswer = () => setFillInBlankAnswers([...fillInBlankAnswers, '']);
+    const removeFillInBlankAnswer = (index: any) =>
+        setFillInBlankAnswers(fillInBlankAnswers.filter((_, i) => i !== index));
+    const editFillInBlankAnswer = (index: any, newText: any) => {
+        const newAnswers = fillInBlankAnswers.slice();
+        newAnswers[index] = newText;
+        setFillInBlankAnswers(newAnswers);
+    }
+
+    const addFillInBlankQuestion = () => {
+        const newQuestion = {
+            //type: 'fill-in-the-blank',  // Defining actual question types would be more clean
+            title: questionTitle,
+            points: questionPoints,
+            answers: fillInBlankAnswers, //.map(answer => answer.toLowerCase()),
+            //choices: choices, // this is added for rendering purposes only, choices is expected to exist 
+        };
+
+        setQuizQuestions([...quizQuestions, newQuestion]);
+        setQuestionTitle('');
+        setQuestionPoints(0);
+        setFillInBlankAnswers(['']);
+    };
+
+
     return (
         <div id="wd-quizzes-editor">
 
@@ -281,9 +310,14 @@ export default function AssignmentEditor() {
                                 <h4>{question.title}</h4>
                                 <p>Points: {question.points}</p>
                                 <ul>
-                                    {question.choices.map((choice: any, i: any) => (
+                                    {question.choices?.map((choice: any, i: any) => (
                                         <li key={i}>
                                             {choice.text} {choice.isCorrect && "(Correct)"}
+                                        </li>
+                                    ))}
+                                    {question.answers?.map((answer: any, i: any) => (
+                                        <li key={i}>
+                                            {answer}
                                         </li>
                                     ))}
                                 </ul>
@@ -370,12 +404,12 @@ export default function AssignmentEditor() {
                                         checked={choice.isCorrect}
                                         onChange={() => changeTrueFalseCorrect(index)}
                                         className="form-check-input-l me-2"
-                                    /> 
+                                    />
 
 
                                 </div>
 
-                                
+
                             ))}
 
                         </div>
@@ -384,7 +418,41 @@ export default function AssignmentEditor() {
                     </div>
 
 
+                    <div className="">
+                        <h3>Add Fill in the Blank Question</h3>
+                        <input
+                            type="text"
+                            value={questionTitle}
+                            onChange={(e) => setQuestionTitle(e.target.value)}
+                            placeholder="Question Title"
+                            className="form-control mb-2"
+                        />
+                        <input
+                            type="number"
+                            value={questionPoints}
+                            onChange={(e) => setQuestionPoints(Number(e.target.value))}
+                            className="form-control mb-2"
+                        />
 
+                        <div className="">
+                            <h4>Accepted Answers</h4>
+                            {fillInBlankAnswers.map((answer, index) => (
+
+                                <div key={index} className="mb-2">
+                                    <input
+                                        type="text"
+                                        value={answer}
+                                        onChange={(e) => editFillInBlankAnswer(index, e.target.value)}
+                                        placeholder={`Answer ${index + 1}`}
+                                        className="form-control me-2"
+                                    />
+                                    <button onClick={() => removeFillInBlankAnswer(index)} className="btn btn-danger">Remove</button>
+                                </div>
+                            ))}
+                            <button onClick={addFillInBlankAnswer} className="btn btn-primary mt-2">Add Answer</button>
+                        </div>
+                        <button onClick={addFillInBlankQuestion} className="btn btn-success mt-3">Save Question</button>
+                    </div>
 
                 </div>
             )}
