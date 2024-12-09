@@ -66,15 +66,15 @@ export default function AssignmentEditor() {
 
     const dispatch = useDispatch();
 
-/*
-    const fetchQuizzes = async () => {
-        const quizzes = await coursesClient.findQuizzesForCourse(cid as string);
-        dispatch(setQuizzes(quizzes));
-    };
-    useEffect(() => {
-        fetchQuizzes();
-    }, [activeTab]);
-*/
+    /*
+        const fetchQuizzes = async () => {
+            const quizzes = await coursesClient.findQuizzesForCourse(cid as string);
+            dispatch(setQuizzes(quizzes));
+        };
+        useEffect(() => {
+            fetchQuizzes();
+        }, [activeTab]);
+    */
 
     // Multiple Choice Question - move consts to top
     const [questionTitle, setQuestionTitle] = useState('');
@@ -97,11 +97,33 @@ export default function AssignmentEditor() {
         setChoices(newChoices);
     };
 
+    const changeTrueFalseCorrect = (index: any) => {
+        const newChoices = trueFalse.map((choice, i) => ({ ...choice, isCorrect: i === index }));
+        setChoices(newChoices);
+    };
+
     const addQuestion = () => {
         const newQuestion = {
             title: questionTitle,
             points: questionPoints,
             choices: choices,
+
+            _id: new Date().toISOString(),
+
+        };
+        setQuizQuestions([...quizQuestions, newQuestion]);
+
+        // Reset fields
+        setQuestionTitle('');
+        setQuestionPoints(0);
+        setChoices([{ text: '', isCorrect: false }]);
+    };
+
+    const addTrueFlaseQuestion = () => {
+        const newQuestion = {
+            title: questionTitle,
+            points: questionPoints,
+            choices: trueFalse,
 
             _id: new Date().toISOString(),
 
@@ -122,6 +144,7 @@ export default function AssignmentEditor() {
         dispatch(updateQuiz(quiz));
     };
 
+    const [trueFalse, setTrueFalse] = useState([{ text: 'True', isCorrect: false }, { text: 'False', isCorrect: false }]);
 
     return (
         <div id="wd-quizzes-editor">
@@ -309,6 +332,60 @@ export default function AssignmentEditor() {
                         {/*<button onClick={() => {addQuestion(); saveQuiz()}} className="btn btn-success mt-3">Add Question</button> */}
                         <button onClick={addQuestion} className="btn btn-success mt-3">Save Question</button>
                     </div>
+
+
+                    <div className="">
+                        <h3>Add True/False Question</h3>
+                        <input
+                            type="text"
+                            value={questionTitle}
+                            onChange={(e) => setQuestionTitle(e.target.value)}
+                            placeholder="Question Title"
+                            className="form-control mb-2"
+                        />
+                        <input
+                            type="number"
+                            value={questionPoints}
+                            onChange={(e) => setQuestionPoints(Number(e.target.value))}
+                            className="form-control mb-2"
+                        />
+
+                        <div className="t">
+                            <h4>Choices</h4>
+                            {trueFalse.map((choice, index) => (
+                                <div key={index} className="mb-2">
+                                    {/*
+                                    <input
+                                        type="text"
+                                        value={choice.text}
+                                        onChange={(e) => editChoices(index, e.target.value)}
+                                        placeholder={`Choice ${index + 1}`}
+                                        className="form-control me-2"
+                                    />
+                                    */}
+                                    {choice.text}
+                                    <input
+                                        type="radio"
+                                        name="choiceTrue"
+                                        checked={choice.isCorrect}
+                                        onChange={() => changeTrueFalseCorrect(index)}
+                                        className="form-check-input-l me-2"
+                                    /> 
+
+
+                                </div>
+
+                                
+                            ))}
+
+                        </div>
+                        {/*<button onClick={() => {addQuestion(); saveQuiz()}} className="btn btn-success mt-3">Add Question</button> */}
+                        <button onClick={addQuestion} className="btn btn-success mt-3">Save Question</button>
+                    </div>
+
+
+
+
                 </div>
             )}
 
