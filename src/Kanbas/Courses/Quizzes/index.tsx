@@ -116,7 +116,7 @@ export default function Quizzes() {
                                     }
                                 })()}
 
-                                | {quiz.points} pts | {quiz.questions.length} Questions
+                                | {quiz.points} pts | {quiz.questions?.length} Questions
 
                                 {/*<b>Not available until </b> {quiz.available ? new Date(quiz.available).toISOString().split('T')[0] : 'N/A'} |<br />
                                 <b>Due</b> {quiz.due ? new Date(quiz.due).toISOString().split('T')[0] : 'N/A'} */}

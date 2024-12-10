@@ -15,14 +15,15 @@ export default function Quizzes() {
     let [deleteId, setDeleteId] = useState("");
     let quizId = pathname.split("/")[5];
     const [quizName, setQuizName] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.title);
-    const [quizAvailable, setQuizAvailable] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.available_raw);
-    const [quizDue, setQuizDue] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.due_raw);
+    const [quizAvailable, setQuizAvailable] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.available);
+    const [quizDue, setQuizDue] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.due);
     const [quizPoints, setQuizPoints] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.points);
     const [quizDesc, setQuizDesc] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.description);
     const quiz = quizzes.find((quiz: any) => quiz._id === quizId);
     const [quizQuestions, setQuizQuestions] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.questions || []);
     const [answers, setAnswers] = useState<{ [key: string]: [number, string] }>({});
     const [currentScore, setCurrentScore] = useState(0);
+    const [startQuiz, setStartQuiz] = useState(false);
 
 
     const fetchQuizzes = async () => {
@@ -118,14 +119,37 @@ export default function Quizzes() {
 
             {currentUser && currentUser.role === "FACULTY" && (
                 <div className="center-justify">
-                    <h5>Quiz Type</h5>
+                    <h5>Quiz Type {quiz.type}</h5>
                     <h5>Points {quizPoints}</h5>
-                    <h5>Available {quizAvailable}</h5>
-                    <h5>Due {quizDue}</h5>{quizDue}
+                    <h5>Available {quizAvailable ? quizAvailable.split('T')[0] : 'N/A'}</h5>
+                    <h5>Due {quizDue ? quizDue.split('T')[0] : 'N/A'}</h5>
+                    <h5>Group {quiz.group}</h5>
+                    <h5>Time {quiz.time}</h5>
+                    <h5>Shuffle {quiz.shuffle}</h5>
                 </div>
-            )}
+            )}<br />
 
-            <div className="">
+            <div className="center-justify">
+                {!startQuiz && currentUser && currentUser.role === "STUDENT" && (
+                    <button
+                        onClick={() => setStartQuiz(true)}
+                        className="btn btn-danger">
+                        Start Quiz
+                    </button>
+                )}
+            </div>
+
+            <div className="center-justify">
+                {!startQuiz && currentUser && currentUser.role === "FACULTY" && (
+                    <button
+                        onClick={() => setStartQuiz(true)}
+                        className="btn btn-danger">
+                        Preview Quiz
+                    </button>
+                )}
+            </div>
+
+            {startQuiz && <div className="">
                 <h3>Questions</h3>
                 {quizQuestions.map((question: any, index: any) => (
                     <div key={index} className="mb-3">
@@ -159,10 +183,18 @@ export default function Quizzes() {
                         )}
                     </div>
                 ))}
-            </div>
+                <button id="wd-save"
+                    onClick={async () => {
+                        { saveGrade() };
+                        window.location.href = `#/Kanbas/Courses/${cid}/Grades/`;
+                    }} type="button"
+                    className="btn btn-danger w-10">
+                    Save</button>
+            </div>}
             <pre>{JSON.stringify(answers, null, 2)}</pre>
             <pre>{JSON.stringify(currentScore, null, 2)}</pre>
 
+            {/* 
             <button id="wd-save"
                 onClick={async () => {
                     { saveGrade() };
@@ -170,6 +202,7 @@ export default function Quizzes() {
                 }} type="button"
                 className="btn btn-danger w-10">
                 Save</button>
+                */}
 
         </div>
     );

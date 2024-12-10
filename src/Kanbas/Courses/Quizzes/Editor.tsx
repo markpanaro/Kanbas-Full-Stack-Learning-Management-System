@@ -15,12 +15,16 @@ export default function AssignmentEditor() {
     const { quizzes } = useSelector((state: any) => state.quizzesReducer);
     const { cid } = useParams();
     let quizId = pathname.split("/")[5];
-    const [quizName, setQuizName] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.title);
+    const [quizName, setQuizName] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.title || "Unnamed Quiz");
     const [quizAvailable, setQuizAvailable] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.available);
     const [quizDue, setQuizDue] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.due);
     const [quizPoints, setQuizPoints] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.points);
     const [quizDesc, setQuizDesc] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.description);
     const [quizPublished, setQuizPublished] = useState(false);
+    const [quizType, setQuizType] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.type || "GRADED_QUIZ");
+    const [quizGroup, setQuizGroup] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.type || "ASSIGNMENTS");
+    const [quizTime, setQuizTime] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.time || 20);
+    const [quizShuffle, setQuizShuffle] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.shuffle || false);
 
 
     const [activeTab, setActiveTab] = useState('details');
@@ -29,27 +33,38 @@ export default function AssignmentEditor() {
 
     const [quizQuestions, setQuizQuestions] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.questions || []);
 
-    // wysiwyg editor
+    // wysiwyg editor question
     const [questionBody, setQuestionBody] = useState('');
     function onChange(e: any) {
         setQuestionBody(e.target.value);
     }
 
+    // wysiwyg editor instructions
+    const [quizInstructions, setQuizInstructions] = useState('');
+    function onInstructionBodyChange(e: any) {
+        setQuizInstructions(e.target.value);
+    }
+
     const createQuizForCourse = async () => {
         if (!cid) return;
 
-        const totalPoints = quizQuestions.reduce((total: any, question:any) => {
+        const totalPoints = quizQuestions.reduce((total: any, question: any) => {
             return total + (question.points || 0);
         }, 0);
-        
+
 
         const newQuiz = {
             title: quizName, course: cid, _id: quizId,
+            instructions: quizInstructions,
             available: quizAvailable,
             due: quizDue,
             points: totalPoints,
             description: quizDesc,
             published: false,
+            type: quizType,
+            group: quizGroup,
+            time: quizTime,
+            shuffle: quizShuffle,
 
             questions: quizQuestions,
 
@@ -60,17 +75,22 @@ export default function AssignmentEditor() {
 
     const saveQuiz = async () => {
 
-        const totalPoints = quizQuestions.reduce((total: any, question:any) => {
+        const totalPoints = quizQuestions.reduce((total: any, question: any) => {
             return total + (question.points || 0);
         }, 0);
 
         const newQuiz = {
             title: quizName, course: cid, _id: quizId,
+            instructions: quizInstructions,
             available: quizAvailable,
             due: quizDue,
             points: totalPoints,
             description: quizDesc,
             published: quizPublished,
+            type: quizType,
+            group: quizGroup,
+            time: quizTime,
+            shuffle: quizShuffle,
 
             questions: quizQuestions
 
@@ -267,31 +287,51 @@ export default function AssignmentEditor() {
                     <input id="wd-name" value={quizName} placeholder={"Unnamed Quiz"}
                         onChange={(e) => setQuizName(e.target.value)}
                         className="form-control mb-2" /><br />
-                    <textarea id="wd-description" className="form-control mb-2"
+                    {/*<textarea id="wd-description" className="form-control mb-2"
                         placeholder={"Provide a description for the quiz"}
                         onChange={(e) => setQuizDesc(e.target.value)}>
                         {quizDesc}
-                    </textarea>
+                    </textarea>*/}
+                    <Editor
+                        value={quizInstructions}
+                        onChange={onInstructionBodyChange}
+                        placeholder="Question body"
+                    />
                     <br />
                     <div className="">
 
                         <div id="wd-type">Quiz Type
-                            <select className="form-control mb-2">
-                                <option className="form-control mb-2" value="Practice Quiz">PRACTICE_QUIZ</option>
-                                <option className="form-control mb-2" value="Graded Quiz" selected>GRADED_QUIZ</option>
-                                <option className="form-control mb-2" value="Graded Survey">GRADED_SURVEY</option>
-                                <option className="form-control mb-2" value="Ungraded Survey">UNGRADED_SURVEY</option>
+                            <select className="form-control mb-2" value={quizType} onChange={(event) => setQuizType(event.target.value)}>
+                                <option className="form-control mb-2" value="PRACTICE_QUIZ">Practice Quiz</option>
+                                <option className="form-control mb-2" value="GRADED_QUIZ">Graded Quiz</option>
+                                <option className="form-control mb-2" value="GRADED_SURVEY">Graded Survey</option>
+                                <option className="form-control mb-2" value="UNGRADED_SURVEY">Ungraded Survey</option>
                             </select>
                         </div><br />
 
 
                         <div id="wd-group">Assignment Group
-                            <select className="form-control mb-2">
+                            <select className="form-control mb-2" value={quizGroup} onChange={(event) => setQuizGroup(event.target.value)}>
                                 <option className="form-control mb-2" value="QUIZ">QUIZ</option>
-                                <option className="form-control mb-2" value="ASSIGNMENTS" selected>ASSIGNMENTS</option>
+                                <option className="form-control mb-2" value="ASSIGNMENTS">ASSIGNMENTS</option>
                                 <option className="form-control mb-2" value="PROJECT">PROJECT</option>
                             </select>
                         </div><br />
+
+                        Time
+                        <input id="wd-name" type="Number" value={quizTime}
+                            onChange={(e) => setQuizTime(e.target.value)}
+                            className="form-control mb-2" /><br />
+
+                        <div>
+                            <input
+                                type="checkbox"
+                                id="quizShuffleCheckbox"
+                                checked={quizShuffle}
+                                onChange={(event) => setQuizShuffle(event.target.checked)}
+                            />
+                            Shuffle Questions
+                        </div>
 
                         <div id="wd-display-grade-as">Display Grade as
                             <select className="form-control mb-2">
