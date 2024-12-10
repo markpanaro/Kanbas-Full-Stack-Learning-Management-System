@@ -16,10 +16,11 @@ export default function AssignmentEditor() {
     const { cid } = useParams();
     let quizId = pathname.split("/")[5];
     const [quizName, setQuizName] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.title);
-    const [quizAvailable, setQuizAvailable] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.available_raw);
-    const [quizDue, setQuizDue] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.due_raw);
+    const [quizAvailable, setQuizAvailable] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.available);
+    const [quizDue, setQuizDue] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.due);
     const [quizPoints, setQuizPoints] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.points);
     const [quizDesc, setQuizDesc] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.description);
+    const [quizPublished, setQuizPublished] = useState(false);
 
 
     const [activeTab, setActiveTab] = useState('details');
@@ -38,10 +39,11 @@ export default function AssignmentEditor() {
         if (!cid) return;
         const newQuiz = {
             title: quizName, course: cid, _id: quizId,
-            available_raw: quizAvailable,
-            due_raw: quizDue,
+            available: quizAvailable,
+            due: quizDue,
             points: quizPoints,
             description: quizDesc,
+            published: false,
 
             questions: quizQuestions,
 
@@ -53,10 +55,11 @@ export default function AssignmentEditor() {
     const saveQuiz = async () => {
         const newQuiz = {
             title: quizName, course: cid, _id: quizId,
-            available_raw: quizAvailable,
-            due_raw: quizDue,
+            available: quizAvailable,
+            due: quizDue,
             points: quizPoints,
             description: quizDesc,
+            published: quizPublished,
 
             questions: quizQuestions
 
