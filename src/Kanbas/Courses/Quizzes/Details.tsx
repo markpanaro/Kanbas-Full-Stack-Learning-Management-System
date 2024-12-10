@@ -131,6 +131,10 @@ export default function Quizzes() {
                     <div key={index} className="mb-3">
                         <h4>{question.title}</h4>
                         <p>Points: {question.points}</p>
+                        {/* The below is a simple way I found to render HTML.
+                        In a proper app this should be sanified before rendering.
+                        I trust that my question inputs will be safe though :) */}
+                        <div dangerouslySetInnerHTML={{ __html: question.body }} />
 
                         {question.answers.length > 0 ? (
                             <input

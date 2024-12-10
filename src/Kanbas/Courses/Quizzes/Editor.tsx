@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import * as coursesClient from "../../Courses/client"
 import * as quizzesClient from "./client"
+import Editor from 'react-simple-wysiwyg';
 
 export default function AssignmentEditor() {
     const { pathname } = useLocation();
@@ -22,8 +23,16 @@ export default function AssignmentEditor() {
 
 
     const [activeTab, setActiveTab] = useState('details');
+    const [selectedQuestionType, setSelectedQuestionType] = useState<string>('multipleChoice');
+
 
     const [quizQuestions, setQuizQuestions] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.questions || []);
+
+    // wysiwyg editor
+    const [questionBody, setQuestionBody] = useState('');
+    function onChange(e: any) {
+        setQuestionBody(e.target.value);
+    }
 
     const createQuizForCourse = async () => {
         if (!cid) return;
@@ -107,12 +116,13 @@ export default function AssignmentEditor() {
             title: questionTitle,
             points: questionPoints,
             choices: choices,
+            body: questionBody,
 
             //_id: new Date().toISOString(),
             _id: updateQuestionIndex !== null ? quizQuestions[updateQuestionIndex]._id : new Date().toISOString(),
 
         };
-        
+
         const upsertQuestion = updateQuestionIndex !== null
             ? quizQuestions.map((question: any, index: any) => index === updateQuestionIndex ? newQuestion : question)
             : [...quizQuestions, newQuestion];
@@ -124,6 +134,7 @@ export default function AssignmentEditor() {
         // Reset fields
         setQuestionTitle('');
         setQuestionPoints(0);
+        setQuestionBody('');
         setChoices([{ text: '', isCorrect: false }]);
     };
 
@@ -173,21 +184,23 @@ export default function AssignmentEditor() {
             title: questionTitle,
             points: questionPoints,
             answers: fillInBlankAnswers, //.map(answer => answer.toLowerCase()),
+            body: questionBody,
             //choices: choices, // this is added for rendering purposes only, choices is expected to exist 
-            
+
             //_id: new Date().toISOString(),
             _id: updateQuestionIndex !== null ? quizQuestions[updateQuestionIndex]._id : new Date().toISOString(),
         };
 
         const upsertQuestion = updateQuestionIndex !== null
-        ? quizQuestions.map((question: any, index: any) => index === updateQuestionIndex ? newQuestion : question)
-        : [...quizQuestions, newQuestion];
+            ? quizQuestions.map((question: any, index: any) => index === updateQuestionIndex ? newQuestion : question)
+            : [...quizQuestions, newQuestion];
 
         setQuizQuestions(upsertQuestion);
 
         //setQuizQuestions([...quizQuestions, newQuestion]);
         setQuestionTitle('');
         setQuestionPoints(0);
+        setQuestionBody('');
         setFillInBlankAnswers(['']);
     };
 
@@ -201,6 +214,15 @@ export default function AssignmentEditor() {
         setQuestionPoints(question.points);
         setChoices(question.choices || []);
         setFillInBlankAnswers(question.answers || []);
+    }
+
+
+    const cancelQuestion = () => {
+        setUpdateQuestionIndex(null);
+        setQuestionTitle('');
+        setQuestionPoints(0);
+        setChoices([]);
+        setFillInBlankAnswers([]);
     }
 
 
@@ -355,70 +377,92 @@ export default function AssignmentEditor() {
                         ))}
                     </div>
 
-                    <div className="">
-                        <h3>Add Multiple Choice Question</h3>
-                        <input
-                            type="text"
-                            value={questionTitle}
-                            onChange={(e) => setQuestionTitle(e.target.value)}
-                            placeholder="Question Title"
-                            className="form-control mb-2"
-                        />
-                        <input
-                            type="number"
-                            value={questionPoints}
-                            onChange={(e) => setQuestionPoints(Number(e.target.value))}
-                            className="form-control mb-2"
-                        />
+                    <select
+                        value={selectedQuestionType}
+                        onChange={(event) => setSelectedQuestionType(event.target.value)}>
+                        <option value="multipleChoice">Multiple Choice</option>
+                        <option value="trueFalse">True/False</option>
+                        <option value="fillIn">Fill in the Blank</option>
+                    </select>
 
+                    {selectedQuestionType === 'multipleChoice' &&
                         <div className="">
-                            <h4>Choices</h4>
-                            {choices.map((choice, index) => (
-                                <div key={index} className="mb-2">
-                                    <input
-                                        type="text"
-                                        value={choice.text}
-                                        onChange={(e) => editChoices(index, e.target.value)}
-                                        placeholder={`Choice ${index + 1}`}
-                                        className="form-control me-2"
-                                    />
-                                    <input
-                                        type="radio"
-                                        checked={choice.isCorrect}
-                                        onChange={() => changeCorrect(index)}
-                                        className="form-check-input me-2"
-                                    />
-                                    <button onClick={() => removeChoice(index)} className="btn btn-danger">Remove</button>
-                                </div>
-                            ))}
-                            <button onClick={addChoice} className="btn btn-primary mt-2">Add Choice</button>
+                            <h3>Add Multiple Choice Question</h3>
+                            <input
+                                type="text"
+                                value={questionTitle}
+                                onChange={(e) => setQuestionTitle(e.target.value)}
+                                placeholder="Question Title"
+                                className="form-control mb-2"
+                            />
+                            <input
+                                type="number"
+                                value={questionPoints}
+                                onChange={(e) => setQuestionPoints(Number(e.target.value))}
+                                className="form-control mb-2"
+                            />
+                            <Editor
+                                value={questionBody}
+                                onChange={onChange}
+                                placeholder="Question body"
+                            />
+
+                            <div className="">
+                                <h4>Choices</h4>
+                                {choices.map((choice, index) => (
+                                    <div key={index} className="mb-2">
+                                        <input
+                                            type="text"
+                                            value={choice.text}
+                                            onChange={(e) => editChoices(index, e.target.value)}
+                                            placeholder={`Choice ${index + 1}`}
+                                            className="form-control me-2"
+                                        />
+                                        <input
+                                            type="radio"
+                                            checked={choice.isCorrect}
+                                            onChange={() => changeCorrect(index)}
+                                            className="form-check-input me-2"
+                                        />
+                                        <button onClick={() => removeChoice(index)} className="btn btn-danger">Remove</button>
+                                    </div>
+                                ))}
+                                <button onClick={addChoice} className="btn btn-primary mt-2">Add Choice</button>
+                            </div>
+                            {/*<button onClick={() => {addQuestion(); saveQuiz()}} className="btn btn-success mt-3">Add Question</button> */}
+                            <button onClick={cancelQuestion} className="btn btn-secondary mt-3">Cancel</button>
+                            <button onClick={addQuestion} className="btn btn-success mt-3">Save Question</button>
                         </div>
-                        {/*<button onClick={() => {addQuestion(); saveQuiz()}} className="btn btn-success mt-3">Add Question</button> */}
-                        <button onClick={addQuestion} className="btn btn-success mt-3">Save Question</button>
-                    </div>
+                    }
 
 
-                    <div className="">
-                        <h3>Add True/False Question</h3>
-                        <input
-                            type="text"
-                            value={questionTitle}
-                            onChange={(e) => setQuestionTitle(e.target.value)}
-                            placeholder="Question Title"
-                            className="form-control mb-2"
-                        />
-                        <input
-                            type="number"
-                            value={questionPoints}
-                            onChange={(e) => setQuestionPoints(Number(e.target.value))}
-                            className="form-control mb-2"
-                        />
+                    {selectedQuestionType === 'trueFalse' &&
+                        <div className="">
+                            <h3>Add True/False Question</h3>
+                            <input
+                                type="text"
+                                value={questionTitle}
+                                onChange={(e) => setQuestionTitle(e.target.value)}
+                                placeholder="Question Title"
+                                className="form-control mb-2"
+                            />
+                            <input
+                                type="number"
+                                value={questionPoints}
+                                onChange={(e) => setQuestionPoints(Number(e.target.value))}
+                                className="form-control mb-2"
+                            />
+                            <Editor
+                                value={questionBody}
+                                onChange={onChange}
+                                placeholder="Question body"
+                            />
 
-                        <div className="t">
-                            <h4>Choices</h4>
-                            {trueFalse.map((choice, index) => (
-                                <div key={index} className="mb-2">
-                                    {/*
+                            <div className="t">
+                                <h4>Choices</h4>
+                                {trueFalse.map((choice, index) => (
+                                    <div key={index} className="mb-2">
+                                        {/*
                                     <input
                                         type="text"
                                         value={choice.text}
@@ -427,62 +471,71 @@ export default function AssignmentEditor() {
                                         className="form-control me-2"
                                     />
                                     */}
-                                    {choice.text}
-                                    <input
-                                        type="radio"
-                                        name="choiceTrue"
-                                        checked={choice.isCorrect}
-                                        onChange={() => changeTrueFalseCorrect(index)}
-                                        className="form-check-input-l me-2"
-                                    />
+                                        {choice.text}
+                                        <input
+                                            type="radio"
+                                            name="choiceTrue"
+                                            checked={choice.isCorrect}
+                                            onChange={() => changeTrueFalseCorrect(index)}
+                                            className="form-check-input-l me-2"
+                                        />
 
 
-                                </div>
+                                    </div>
 
 
-                            ))}
+                                ))}
 
+                            </div>
+                            {/*<button onClick={() => {addQuestion(); saveQuiz()}} className="btn btn-success mt-3">Add Question</button> */}
+                            <button onClick={cancelQuestion} className="btn btn-secondary mt-3">Cancel</button>
+                            <button onClick={addQuestion} className="btn btn-success mt-3">Save Question</button>
                         </div>
-                        {/*<button onClick={() => {addQuestion(); saveQuiz()}} className="btn btn-success mt-3">Add Question</button> */}
-                        <button onClick={addQuestion} className="btn btn-success mt-3">Save Question</button>
-                    </div>
+                    }
 
-
-                    <div className="">
-                        <h3>Add Fill in the Blank Question</h3>
-                        <input
-                            type="text"
-                            value={questionTitle}
-                            onChange={(e) => setQuestionTitle(e.target.value)}
-                            placeholder="Question Title"
-                            className="form-control mb-2"
-                        />
-                        <input
-                            type="number"
-                            value={questionPoints}
-                            onChange={(e) => setQuestionPoints(Number(e.target.value))}
-                            className="form-control mb-2"
-                        />
-
+                    {selectedQuestionType === 'fillIn' &&
                         <div className="">
-                            <h4>Accepted Answers</h4>
-                            {fillInBlankAnswers.map((answer, index) => (
+                            <h3>Add Fill in the Blank Question</h3>
+                            <input
+                                type="text"
+                                value={questionTitle}
+                                onChange={(e) => setQuestionTitle(e.target.value)}
+                                placeholder="Question Title"
+                                className="form-control mb-2"
+                            />
+                            <input
+                                type="number"
+                                value={questionPoints}
+                                onChange={(e) => setQuestionPoints(Number(e.target.value))}
+                                className="form-control mb-2"
+                            />
+                            <Editor
+                                value={questionBody}
+                                onChange={onChange}
+                                placeholder="Question body"
+                            />
 
-                                <div key={index} className="mb-2">
-                                    <input
-                                        type="text"
-                                        value={answer}
-                                        onChange={(e) => editFillInBlankAnswer(index, e.target.value)}
-                                        placeholder={`Answer ${index + 1}`}
-                                        className="form-control me-2"
-                                    />
-                                    <button onClick={() => removeFillInBlankAnswer(index)} className="btn btn-danger">Remove</button>
-                                </div>
-                            ))}
-                            <button onClick={addFillInBlankAnswer} className="btn btn-primary mt-2">Add Answer</button>
+                            <div className="">
+                                <h4>Accepted Answers</h4>
+                                {fillInBlankAnswers.map((answer, index) => (
+
+                                    <div key={index} className="mb-2">
+                                        <input
+                                            type="text"
+                                            value={answer}
+                                            onChange={(e) => editFillInBlankAnswer(index, e.target.value)}
+                                            placeholder={`Answer ${index + 1}`}
+                                            className="form-control me-2"
+                                        />
+                                        <button onClick={() => removeFillInBlankAnswer(index)} className="btn btn-danger">Remove</button>
+                                    </div>
+                                ))}
+                                <button onClick={addFillInBlankAnswer} className="btn btn-primary mt-2">Add Answer</button>
+                            </div>
+                            <button onClick={cancelQuestion} className="btn btn-secondary mt-3">Cancel</button>
+                            <button onClick={addFillInBlankQuestion} className="btn btn-success mt-3">Save Question</button>
                         </div>
-                        <button onClick={addFillInBlankQuestion} className="btn btn-success mt-3">Save Question</button>
-                    </div>
+                    }
 
                 </div>
             )}
