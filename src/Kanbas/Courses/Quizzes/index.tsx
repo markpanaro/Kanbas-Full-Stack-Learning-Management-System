@@ -98,9 +98,28 @@ export default function Quizzes() {
                                     href={`#/Kanbas/Courses/${quiz.course}/Quizzes/${quiz._id}/details`}>
                                     {quiz.title}
                                 </a>
-                                <br /><span className="red-text">Multiple Modules</span> |
-                                <b>Not available until </b> {quiz.available ? new Date(quiz.available).toISOString().split('T')[0] : 'N/A'} |<br />
-                                <b>Due</b> {quiz.due ? new Date(quiz.due).toISOString().split('T')[0] : 'N/A'} | {quiz.points} pts
+                                <br />
+
+                                {(() => {
+                                    const currentDate = new Date();
+                                    const available = quiz.available ? new Date(quiz.available) : null;
+                                    const due = quiz.due ? new Date(quiz.due) : null;
+
+                                    if (available && currentDate < available) {
+                                        return <><b>Not available until</b> {available.toISOString().split('T')[0]} </>;
+                                    } else if (available && due && currentDate >= available && currentDate <= due) {
+                                        return <><b>Available</b> | <b>Due</b> {due.toISOString().split('T')[0]} </>;
+                                    } else if (available && due && currentDate > due) {
+                                        return <><b>Closed</b> </>;
+                                    } else {
+                                        return <><b>No date information</b> </>;
+                                    }
+                                })()}
+
+                                | {quiz.points} pts | {quiz.questions.length} Questions
+
+                                {/*<b>Not available until </b> {quiz.available ? new Date(quiz.available).toISOString().split('T')[0] : 'N/A'} |<br />
+                                <b>Due</b> {quiz.due ? new Date(quiz.due).toISOString().split('T')[0] : 'N/A'} */}
 
 
                                 <div className="float-end">
@@ -148,10 +167,27 @@ export default function Quizzes() {
                                     href={`#/Kanbas/Courses/${quiz.course}/Quizzes/${quiz._id}/details`}>
                                     {quiz.title}
                                 </a>
-                                <br /><span className="red-text">Multiple Modules</span> |
-                                <b>Not available until </b> {quiz.available ? new Date(quiz.available).toISOString().split('T')[0] : 'N/A'} |<br />
-                                <b>Due</b> {quiz.due ? new Date(quiz.due).toISOString().split('T')[0] : 'N/A'} | {quiz.points} pts
+                                <br />
+                                {/*<b>Not available until </b> {quiz.available ? new Date(quiz.available).toISOString().split('T')[0] : 'N/A'} |<br />
+                                <b>Due</b> {quiz.due ? new Date(quiz.due).toISOString().split('T')[0] : 'N/A'} | {quiz.points} pts | {quiz.questions.length} Questions*/}
 
+                                {(() => {
+                                    const currentDate = new Date();
+                                    const available = quiz.available ? new Date(quiz.available) : null;
+                                    const due = quiz.due ? new Date(quiz.due) : null;
+
+                                    if (available && currentDate < available) {
+                                        return <><b>Not available until</b> {available.toISOString().split('T')[0]} </>;
+                                    } else if (available && due && currentDate >= available && currentDate <= due) {
+                                        return <><b>Available</b> | <b>Due</b> {due.toISOString().split('T')[0]} </>;
+                                    } else if (available && due && currentDate > due) {
+                                        return <><b>Closed</b> </>;
+                                    } else {
+                                        return <><b>No date information</b> </>;
+                                    }
+                                })()}
+
+                                | {quiz.points} pts | {quiz.questions.length} Questions
 
                                 <div className="float-end">
                                     <ProtectedAdminRoute>

@@ -37,11 +37,17 @@ export default function AssignmentEditor() {
 
     const createQuizForCourse = async () => {
         if (!cid) return;
+
+        const totalPoints = quizQuestions.reduce((total: any, question:any) => {
+            return total + (question.points || 0);
+        }, 0);
+        
+
         const newQuiz = {
             title: quizName, course: cid, _id: quizId,
             available: quizAvailable,
             due: quizDue,
-            points: quizPoints,
+            points: totalPoints,
             description: quizDesc,
             published: false,
 
@@ -53,11 +59,16 @@ export default function AssignmentEditor() {
     };
 
     const saveQuiz = async () => {
+
+        const totalPoints = quizQuestions.reduce((total: any, question:any) => {
+            return total + (question.points || 0);
+        }, 0);
+
         const newQuiz = {
             title: quizName, course: cid, _id: quizId,
             available: quizAvailable,
             due: quizDue,
-            points: quizPoints,
+            points: totalPoints,
             description: quizDesc,
             published: quizPublished,
 
