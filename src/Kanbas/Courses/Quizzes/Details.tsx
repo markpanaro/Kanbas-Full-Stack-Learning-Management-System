@@ -158,6 +158,7 @@ export default function Quizzes() {
                     <h5>Time {quiz.time}</h5>
                     <h5>Shuffle {String(quiz.shuffle)}</h5>
                     <h5>Show Answers {String(quiz.showAnswers)}</h5>
+                    <h5>Multiple Attempts {String(quiz.allowMultipleAttempts)}</h5>
                     <h5>Quiz Attempts {quiz.attempts}</h5>
                     <h5>Quiz Show Answers {String(quiz.showAnswers)}</h5>
                     <h5>Quiz Passcode {quiz.password}</h5>
@@ -189,6 +190,8 @@ export default function Quizzes() {
             </div>
 
             {startQuiz && <div className="">
+                <h3>Instructions</h3>
+                <div dangerouslySetInnerHTML={{ __html: quiz.instructions }} /><br/>
                 <h3>Questions</h3>
                 {quizQuestions.map((question: any, index: any) => (
                     <div key={index} className="mb-3">
@@ -228,7 +231,7 @@ export default function Quizzes() {
                         window.location.href = `#/Kanbas/Courses/${cid}/Grades/`;
                     }} type="button"
                     className="btn btn-danger w-10">
-                    Save</button>
+                    Submit</button>
             </div>}
 
             {/* 

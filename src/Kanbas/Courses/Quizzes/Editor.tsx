@@ -32,7 +32,7 @@ export default function AssignmentEditor() {
     const [quizOneQuestionAtTime, setQuizOneQuestionAtTime] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.oneAtTime ?? true);
     const [quizWebcam, setQuizWebcam] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.webcam || false);
     const [quizLockQuestions, setQuizLockQuestions] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.lockQuestions || false);
-
+    const [quizAllowMultipleAttempts, setQuizAllowMultipleAttempts] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.allowMultipleAttempts || false);
 
 
     const [activeTab, setActiveTab] = useState('details');
@@ -74,6 +74,7 @@ export default function AssignmentEditor() {
             time: quizTime,
             shuffle: quizShuffle,
             showAnswers: quizShowAnswers,
+            allowMultipleAttempts: quizAllowMultipleAttempts,
             attempts: quizAttempts,
             password: quizPassword,
             oneAtTime: quizOneQuestionAtTime,
@@ -106,6 +107,7 @@ export default function AssignmentEditor() {
             time: quizTime,
             shuffle: quizShuffle,
             showAnswers: quizShowAnswers,
+            allowMultipleAttempts: quizAllowMultipleAttempts,
             attempts: quizAttempts,
             password: quizPassword,
             oneAtTime: quizOneQuestionAtTime,
@@ -330,7 +332,7 @@ export default function AssignmentEditor() {
                     <Editor
                         value={quizInstructions}
                         onChange={onInstructionBodyChange}
-                        placeholder="Question body"
+                        placeholder="Quiz Instructions"
                     />
                     <br />
                     <div className="">
@@ -402,16 +404,28 @@ export default function AssignmentEditor() {
                                 onChange={(event) => setQuizLockQuestions(event.target.checked)}
                             />
                             Lock Questions after Answer
+                        </div>
+                        <div>
+                            <input
+                                type="checkbox"
+                                id="quizLockCheckbox"
+                                checked={quizAllowMultipleAttempts}
+                                onChange={(event) => setQuizAllowMultipleAttempts(event.target.checked)}
+                            />
+                            Allow Multiple Attempts
                         </div><br />
+
+                        {quizAllowMultipleAttempts && (
+                            <div>
+                                Quiz Attempts
+                                <input id="wd-name" type="Number" value={quizAttempts}
+                                    onChange={(e) => setQuizAttempts(e.target.value)}
+                                    className="form-control mb-2" /><br />
+                            </div>)}
 
                         Quiz Passcode
                         <input id="wd-passcode" value={quizPassword} placeholder={"Quiz Passcode"}
                             onChange={(e) => setQuizPassword(e.target.value)}
-                            className="form-control mb-2" /><br />
-
-                        Quiz Attempts
-                        <input id="wd-name" type="Number" value={quizAttempts}
-                            onChange={(e) => setQuizAttempts(e.target.value)}
                             className="form-control mb-2" /><br />
 
                         <div id="wd-display-grade-as">Display Grade as
