@@ -209,9 +209,11 @@ export default function Quizzes() {
                     className="btn btn-danger w-10">
                     Save</button>
             </div>}
+
+            {/* 
             <pre>{JSON.stringify(answers, null, 2)}</pre>
             <pre>{JSON.stringify(currentScore, null, 2)}</pre>
-
+            */}
             {/* 
             <button id="wd-save"
                 onClick={async () => {
@@ -220,7 +222,7 @@ export default function Quizzes() {
                 }} type="button"
                 className="btn btn-danger w-10">
                 Save</button>
-                */}
+            */}
 
         </div>
     );

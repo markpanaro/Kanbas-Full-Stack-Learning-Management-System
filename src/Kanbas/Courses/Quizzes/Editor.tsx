@@ -25,11 +25,11 @@ export default function AssignmentEditor() {
     const [quizType, setQuizType] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.type || "GRADED_QUIZ");
     const [quizGroup, setQuizGroup] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.group || "ASSIGNMENTS");
     const [quizTime, setQuizTime] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.time || 20);
-    const [quizShuffle, setQuizShuffle] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.shuffle || true);
+    const [quizShuffle, setQuizShuffle] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.shuffle ?? true);
     const [quizAttempts, setQuizAttempts] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.attempts || 1);
     const [quizShowAnswers, setQuizShowAnswers] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.showAnswers || false);
     const [quizPassword, setQuizPassword] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.password || "");
-    const [quizOneQuestionAtTime, setQuizOneQuestionAtTime] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.oneAtTime || true);
+    const [quizOneQuestionAtTime, setQuizOneQuestionAtTime] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.oneAtTime ?? true);
     const [quizWebcam, setQuizWebcam] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.webcam || false);
     const [quizLockQuestions, setQuizLockQuestions] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.lockQuestions || false);
 
@@ -270,6 +270,21 @@ export default function AssignmentEditor() {
         setFillInBlankAnswers(question.answers || []);
     }
 
+    // Save and publish effect
+    const [saveAndPublish, setSaveAndPublish] = useState(false);
+    useEffect(() => {
+        if (saveAndPublish) {
+            const saveAndPublish = async () => {
+                if (createQuizFlag) {
+                    await createQuizForCourse();
+                } else {
+                    await saveQuiz();
+                }
+                window.location.href = `#/Kanbas/Courses/${cid}/Quizzes/`;
+            };
+            saveAndPublish();
+        }
+    }, [saveAndPublish]);
 
     const cancelQuestion = () => {
         setUpdateQuestionIndex(null);
@@ -355,7 +370,7 @@ export default function AssignmentEditor() {
                         <div>
                             <input
                                 type="checkbox"
-                                id="quizShuffleCheckbox"
+                                id="quizShowAnswersCheckbox"
                                 checked={quizShowAnswers}
                                 onChange={(event) => setQuizShowAnswers(event.target.checked)}
                             />
@@ -395,7 +410,7 @@ export default function AssignmentEditor() {
                             className="form-control mb-2" /><br />
 
                         Quiz Attempts
-                        <input id="wd-name" type="Number" value={quizAttempts} 
+                        <input id="wd-name" type="Number" value={quizAttempts}
                             onChange={(e) => setQuizAttempts(e.target.value)}
                             className="form-control mb-2" /><br />
 
@@ -681,8 +696,17 @@ export default function AssignmentEditor() {
                     ;
                     window.location.href = `#/Kanbas/Courses/${cid}/Quizzes/`;
                 }} type="button"
-                className="btn btn-danger w-10">
+                className="btn btn-danger w-10 ms-2">
                 Save</button>
+
+            <button id="wd-save-publish"
+                onClick={async () => {
+                    setQuizPublished(true);
+                    setSaveAndPublish(true);
+                }} type="button"
+                className="btn btn-danger w-10 ms-2">
+                Save and Publish
+            </button>
         </div>
     );
 }
