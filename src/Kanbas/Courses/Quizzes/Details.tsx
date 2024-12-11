@@ -6,6 +6,7 @@ import ProtectedAdminRoute from "../../Account/ProtectedAdminRoute"
 import { setQuizzes, deleteQuiz, addQuiz } from "../Quizzes/reducer";
 import * as gradesClient from "../Grades/client";
 import { FaPencil } from "react-icons/fa6";
+import { setTextRange } from "typescript";
 
 export default function Quizzes() {
     const { currentUser } = useSelector((state: any) => state.accountReducer);
@@ -27,6 +28,7 @@ export default function Quizzes() {
     const [answers, setAnswers] = useState<{ [key: string]: [string, string, number] }>({});
     const [currentScore, setCurrentScore] = useState(0);
     const [startQuiz, setStartQuiz] = useState(false);
+    const [remainingAttempts, setRemainingAttempts] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.attempts || 1);
 
 
     const fetchQuizzes = async () => {
@@ -36,6 +38,17 @@ export default function Quizzes() {
     useEffect(() => {
         fetchQuizzes();
     }, []);
+
+    const checkRemainingAttempts = async () => {
+        const existingGrade = await gradesClient.fetchGrade(quizId);
+        //console.log(existingGrade);
+        //console.log(existingGrade[0]?._id);
+        setRemainingAttempts(existingGrade[0]?.remainingAttempts ?? remainingAttempts);
+    }
+    useEffect(() => {
+        checkRemainingAttempts();
+    }, []);
+    console.log(remainingAttempts);
 
     const changeAnswer = (questionId: string, index: number) => {
         //const isCorrect = quiz.questions
@@ -100,6 +113,7 @@ export default function Quizzes() {
             answers: answers,
             user: currentUser._id,
             score: currentScore,
+            remainingAttempts: currentUser && currentUser.role === "STUDENT" ? remainingAttempts - 1 : remainingAttempts,
         };
         const existingGrade = await gradesClient.fetchGrade(quizId);
         //console.log(existingGrade);
@@ -155,7 +169,7 @@ export default function Quizzes() {
             )}<br />
 
             <div className="center-justify">
-                {!startQuiz && currentUser && currentUser.role === "STUDENT" && (
+                {!startQuiz && currentUser && remainingAttempts > 0 && currentUser.role === "STUDENT" && (
                     <button
                         onClick={() => setStartQuiz(true)}
                         className="btn btn-danger">
