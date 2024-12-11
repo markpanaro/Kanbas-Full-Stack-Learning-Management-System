@@ -143,9 +143,9 @@ export default function Quizzes() {
     return (
         <div id="wd-quiz-details">
             <h1>{quizName}
-                <FaPencil onClick={() =>
+                {currentUser && currentUser.role === "FACULTY" && (<FaPencil onClick={() =>
                     window.location.href = `#/Kanbas/Courses/${quiz.course}/Quizzes/${quiz._id}`}
-                    className="text-primary me-3 px-2" />
+                    className="text-primary me-3 px-2" />)}
             </h1>
 
             {currentUser && currentUser.role === "FACULTY" && (
@@ -160,11 +160,10 @@ export default function Quizzes() {
                     <h5>Show Answers {String(quiz.showAnswers)}</h5>
                     <h5>Multiple Attempts {String(quiz.allowMultipleAttempts)}</h5>
                     <h5>Quiz Attempts {quiz.attempts}</h5>
-                    <h5>Quiz Show Answers {String(quiz.showAnswers)}</h5>
                     <h5>Quiz Passcode {quiz.password}</h5>
                     <h5>Questions one at a Time {String(quiz.oneAtTime)}</h5>
                     <h5>Webcam Required {String(quiz.webcam)}</h5>
-                    <h5>Quiz Lock Answers {String(quiz.lockQuestions)}</h5>
+                    <h5>Lock Answers {String(quiz.lockQuestions)}</h5>
 
                 </div>
             )}<br />
@@ -191,7 +190,7 @@ export default function Quizzes() {
 
             {startQuiz && <div className="">
                 <h3>Instructions</h3>
-                <div dangerouslySetInnerHTML={{ __html: quiz.instructions }} /><br/>
+                <div dangerouslySetInnerHTML={{ __html: quiz.instructions }} /><br />
                 <h3>Questions</h3>
                 {quizQuestions.map((question: any, index: any) => (
                     <div key={index} className="mb-3">
