@@ -113,6 +113,7 @@ export default function Quizzes() {
             answers: answers,
             user: currentUser._id,
             score: currentScore,
+            taken: new Date(),
             remainingAttempts: currentUser && currentUser.role === "STUDENT" ? remainingAttempts - 1 : remainingAttempts,
         };
         const existingGrade = await gradesClient.fetchGrade(quizId);
@@ -158,13 +159,13 @@ export default function Quizzes() {
                     <h5>Time {quiz.time}</h5>
                     <h5>Shuffle {String(quiz.shuffle)}</h5>
                     <h5>Show Answers {String(quiz.showAnswers)}</h5>
+                    <h5>Show Answers Date {quiz.showAnswersDate ? quiz.showAnswersDate.split('T')[0] : 'N/A'}</h5>
                     <h5>Multiple Attempts {String(quiz.allowMultipleAttempts)}</h5>
                     <h5>Quiz Attempts {quiz.attempts}</h5>
                     <h5>Quiz Passcode {quiz.password}</h5>
                     <h5>Questions one at a Time {String(quiz.oneAtTime)}</h5>
                     <h5>Webcam Required {String(quiz.webcam)}</h5>
                     <h5>Lock Answers {String(quiz.lockQuestions)}</h5>
-
                 </div>
             )}<br />
 

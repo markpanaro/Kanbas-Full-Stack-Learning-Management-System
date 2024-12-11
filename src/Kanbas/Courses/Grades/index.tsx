@@ -55,8 +55,8 @@ export default function Grades() {
                         href={`#/Kanbas/Courses/${quiz.course}/Quizzes/${quiz._id}/details`}>
                         {quiz.title}
                     </a>
-                    <br /><span className="red-text">Multiple Modules</span> | <b>Not available until </b> {quiz.available || quiz.available_raw} |<br />
-                    <b>Due</b> {quiz.due || quiz.due_raw} | {quiz.points} pts
+                    <br /><span className="red-text">Multiple Modules</span> | <b>Not available until </b> {quiz.available?.split('T')[0] || "N/A"} |<br />
+                    <b>Due</b> {quiz.due?.split('T')[0] || "N/A"} | {quiz.points} pts
 
                     {/* <pre>{JSON.stringify(grades[quiz._id], null, 2)}</pre> */}
 
@@ -80,6 +80,7 @@ export default function Grades() {
                             */}
 
                             <b>Earned points: </b>{grade.score}<br/>
+                            <b>Date taken: </b>{grade.taken?.split('T')[0] || "N/A"}<br/>
                             <b>Questions:</b>
                             {Object.entries(grade.answers).map(([_id, answer]) => {
                                 //const [score, isCorrect] = answer;
@@ -88,7 +89,7 @@ export default function Grades() {
                                 const [choice, isCorrect] = answer as Answer;
                                 return (
                                     <li >
-                                        Answer: {choice}, Correct?: {isCorrect ? <FcCheckmark /> : <RxCross2 style={{ color: "red" }} />}
+                                        Answered: {choice}, Correct?: {isCorrect ? <FcCheckmark /> : <RxCross2 style={{ color: "red" }} />}
                                     </li>
                                 );
                             })}

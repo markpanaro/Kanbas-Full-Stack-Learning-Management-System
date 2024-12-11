@@ -28,6 +28,7 @@ export default function AssignmentEditor() {
     const [quizShuffle, setQuizShuffle] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.shuffle ?? true);
     const [quizAttempts, setQuizAttempts] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.attempts || 1);
     const [quizShowAnswers, setQuizShowAnswers] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.showAnswers || false);
+    const [quizShowAnswersDate, setQuizShowAnswersDate] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.showAnswersDate);
     const [quizPassword, setQuizPassword] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.password || "");
     const [quizOneQuestionAtTime, setQuizOneQuestionAtTime] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.oneAtTime ?? true);
     const [quizWebcam, setQuizWebcam] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.webcam || false);
@@ -76,6 +77,7 @@ export default function AssignmentEditor() {
             showAnswers: quizShowAnswers,
             allowMultipleAttempts: quizAllowMultipleAttempts,
             attempts: quizAttempts,
+            showAnswersDate: quizShowAnswersDate,
             password: quizPassword,
             oneAtTime: quizOneQuestionAtTime,
             webcam: quizWebcam,
@@ -109,6 +111,7 @@ export default function AssignmentEditor() {
             showAnswers: quizShowAnswers,
             allowMultipleAttempts: quizAllowMultipleAttempts,
             attempts: quizAttempts,
+            showAnswersDate: quizShowAnswersDate,
             password: quizPassword,
             oneAtTime: quizOneQuestionAtTime,
             webcam: quizWebcam,
@@ -423,6 +426,16 @@ export default function AssignmentEditor() {
                                     className="form-control mb-2" /><br />
                             </div>)}
 
+                        {quizShowAnswers && (
+                            <div>
+                                <input type="date"
+                                    id="wd-show-date"
+                                    className="form-control mb-2"
+                                    onChange={(e) => setQuizShowAnswersDate(e.target.value)}
+                                    value={quizShowAnswersDate?.split('T')[0]} />
+                                <br />
+                            </div>)}
+
                         Quiz Passcode
                         <input id="wd-passcode" value={quizPassword} placeholder={"Quiz Passcode"}
                             onChange={(e) => setQuizPassword(e.target.value)}
@@ -474,7 +487,7 @@ export default function AssignmentEditor() {
                             id="wd-due-date"
                             className="form-control mb-2"
                             onChange={(e) => setQuizDue(e.target.value)}
-                            value={quizDue} />
+                            value={quizDue?.split('T')[0]} />
                         <br />
                         <div className="row">
                             <div className="col-md-6">
@@ -483,14 +496,14 @@ export default function AssignmentEditor() {
                                     id="wd-available-from"
                                     className="form-control mb-2"
                                     onChange={(e) => setQuizAvailable(e.target.value)}
-                                    value={quizAvailable} />
+                                    value={quizAvailable?.split('T')[0]} />
                             </div>
                             <div className="col-md-6">
                                 <label htmlFor="wd-available-until"> <b>Available until</b> </label>
                                 <input type="date"
                                     id="wd-available-until"
                                     className="form-control mb-2"
-                                    value={quizDue} /><br />
+                                    value={quizDue?.split('T')[0]} /><br />
                             </div>
                         </div>
                     </div>
