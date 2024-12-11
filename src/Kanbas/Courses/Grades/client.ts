@@ -23,6 +23,6 @@ export const updateGrade = async (grade: any) => {
 */
 export const updateGrade = async (gradeId: any, grade: any) => {
     //const { data } = await axiosWithCredentials.put(`${GRADES_API}/${grade._id}`, grade);
-    const { data } = await axiosWithCredentials.put(`${GRADES_API}`, gradeId, grade);
+    const { data } = await axiosWithCredentials.put(`${GRADES_API}/${gradeId}`, grade);
     return data;
 };

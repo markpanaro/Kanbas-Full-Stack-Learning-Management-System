@@ -102,7 +102,14 @@ export default function Quizzes() {
             score: currentScore,
         };
         const existingGrade = await gradesClient.fetchGrade(quizId);
-        const grade = await gradesClient.saveGrade(newGrade);
+        //console.log(existingGrade);
+        console.log(existingGrade[0]?._id);
+        if (existingGrade[0]?._id) {
+            const updateGrade = await gradesClient.updateGrade(existingGrade[0]?._id, newGrade);
+        } else {
+            const grade = await gradesClient.saveGrade(newGrade);
+        }
+        //const grade = await gradesClient.saveGrade(newGrade);
 
         //const existingGrade = await gradesClient.fetchGrade();
         //if (existingGrade._id) {
