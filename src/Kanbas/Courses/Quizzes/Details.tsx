@@ -21,7 +21,8 @@ export default function Quizzes() {
     const [quizDesc, setQuizDesc] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.description);
     const quiz = quizzes.find((quiz: any) => quiz._id === quizId);
     const [quizQuestions, setQuizQuestions] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.questions || []);
-    const [answers, setAnswers] = useState<{ [key: string]: [number, string] }>({});
+    //const [answers, setAnswers] = useState<{ [key: string]: [number, string] }>({});
+    const [answers, setAnswers] = useState<{ [key: string]: [string, string, number] }>({});
     const [currentScore, setCurrentScore] = useState(0);
     const [startQuiz, setStartQuiz] = useState(false);
 
@@ -41,7 +42,7 @@ export default function Quizzes() {
         const question = quiz.questions.find((question: any) => question._id === questionId);
         const isCorrect = question?.choices[index]?.isCorrect || false;
         const points = question?.points || 0;
-
+        
 
         const currentlyCorrect = answers[questionId]?.[1];
 
@@ -63,10 +64,12 @@ export default function Quizzes() {
        setCurrentScore(currentScore + points);
    }
        */
+        const choice = question?.choices[index];
 
         setAnswers({
             ...answers,
-            [questionId]: [index, isCorrect]
+            //[questionId]: [index, isCorrect]
+            [questionId]: [choice.text, isCorrect, index]
         });
     };
 
@@ -84,7 +87,8 @@ export default function Quizzes() {
 
         setAnswers({
             ...answers,
-            [questionId]: [-1, isCorrect],
+            //[questionId]: [-1, isCorrect],
+            [questionId]: [answer, isCorrect, -1],
         });
     };
 
@@ -172,7 +176,7 @@ export default function Quizzes() {
                                         <input
                                             type="radio"
                                             value={index}
-                                            checked={answers[question._id]?.[0] === index}
+                                            checked={answers[question._id]?.[2] === index}
                                             onChange={() => changeAnswer(question._id, index)
                                             }
                                         />
