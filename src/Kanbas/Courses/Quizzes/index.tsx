@@ -15,6 +15,7 @@ import * as coursesClient from "../../Courses/client"
 //import * as assignmentsClient from "../Assignments/client"
 import * as quizzesClient from "../Quizzes/client"
 import { setQuizzes, deleteQuiz, addQuiz } from "../Quizzes/reducer";
+import * as gradesClient from "../Grades/client"
 
 export default function Quizzes() {
 
@@ -25,6 +26,7 @@ export default function Quizzes() {
     let [deleteWindow, setDeleteWindow] = useState(false);
     let [deleteId, setDeleteId] = useState("");
     const [menu, setMenu] = useState<string | null>(null);
+    const [grades, setGrades] = useState<{ [key: string]: any }>({});
 
     //let assignmentID = assignment.id;
 
@@ -39,11 +41,22 @@ export default function Quizzes() {
     const fetchQuizzes = async () => {
         const quizzes = await coursesClient.findQuizzesForCourse(cid as string);
         dispatch(setQuizzes(quizzes));
+
+        const fetchGrades = async () => {
+            const gradesData: { [key: string]: any } = {};
+            for (let quiz of quizzes) {
+                const grade = await gradesClient.fetchGrade(quiz._id);
+                gradesData[quiz._id] = grade;
+            }
+            setGrades(gradesData);
+        };
+        fetchGrades();
     };
 
     const updatePublished = async (quiz: any) => {
         const newQuiz = { ...quiz, published: !quiz.published };
         await quizzesClient.saveQuiz(newQuiz)
+        fetchQuizzes();
     }
 
     const enableMenu = (quizId: string) => {
@@ -52,7 +65,7 @@ export default function Quizzes() {
 
     useEffect(() => {
         fetchQuizzes();
-    }, [updatePublished]); //[]); seems to refresh too often
+    }, []); //[updatePublished]); seems to refresh too often
 
 
     return (
@@ -156,14 +169,14 @@ export default function Quizzes() {
                                     <IoEllipsisVertical className="fs-4" onClick={() => enableMenu(quiz._id)} />
 
                                     {menu === quiz._id && (
-                                <div className="quiz-context-menu">
-                                    <ul>
-                                        <li onClick={() => window.location.href = `#/Kanbas/Courses/${quiz.course}/Quizzes/${quiz._id}`}>Edit</li>
-                                        <li onClick={() => { setDeleteWindow(true); setDeleteId(quiz._id); }}>Delete</li>
-                                        <li onClick={() => updatePublished(quiz)}>{quiz.published ? 'Unpublish' : 'Publish'}</li>
-                                    </ul>
-                                </div>
-                            )}
+                                        <div className="quiz-context-menu">
+                                            <ul>
+                                                <li onClick={() => window.location.href = `#/Kanbas/Courses/${quiz.course}/Quizzes/${quiz._id}`}>Edit</li>
+                                                <li onClick={() => { setDeleteWindow(true); setDeleteId(quiz._id); }}>Delete</li>
+                                                <li onClick={() => updatePublished(quiz)}>{quiz.published ? 'Unpublish' : 'Publish'}</li>
+                                            </ul>
+                                        </div>
+                                    )}
 
                                 </div>
                                 {deleteWindow && quiz._id === deleteId && (
@@ -204,6 +217,12 @@ export default function Quizzes() {
                                 })()}
 
                                 | {quiz.points} pts | {quiz.questions.length} Questions
+
+                                {grades[quiz._id]?.map((grade: any) => (
+                                    <span> | Score: {grade?.score}</span>
+                                ))}
+
+
 
                                 <div className="float-end">
                                     <ProtectedAdminRoute>
