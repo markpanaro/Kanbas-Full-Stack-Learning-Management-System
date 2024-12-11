@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import * as coursesClient from "../../Courses/client"
 import * as quizzesClient from "./client"
 import Editor from 'react-simple-wysiwyg';
+import { MdPassword } from "react-icons/md";
 
 export default function AssignmentEditor() {
     const { pathname } = useLocation();
@@ -22,9 +23,16 @@ export default function AssignmentEditor() {
     const [quizDesc, setQuizDesc] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.description);
     const [quizPublished, setQuizPublished] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.published || false);
     const [quizType, setQuizType] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.type || "GRADED_QUIZ");
-    const [quizGroup, setQuizGroup] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.type || "ASSIGNMENTS");
+    const [quizGroup, setQuizGroup] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.group || "ASSIGNMENTS");
     const [quizTime, setQuizTime] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.time || 20);
-    const [quizShuffle, setQuizShuffle] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.shuffle || false);
+    const [quizShuffle, setQuizShuffle] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.shuffle || true);
+    const [quizAttempts, setQuizAttempts] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.attempts || 1);
+    const [quizShowAnswers, setQuizShowAnswers] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.showAnswers || false);
+    const [quizPassword, setQuizPassword] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.password || "");
+    const [quizOneQuestionAtTime, setQuizOneQuestionAtTime] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.oneAtTime || true);
+    const [quizWebcam, setQuizWebcam] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.webcam || false);
+    const [quizLockQuestions, setQuizLockQuestions] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.lockQuestions || false);
+
 
 
     const [activeTab, setActiveTab] = useState('details');
@@ -65,6 +73,12 @@ export default function AssignmentEditor() {
             group: quizGroup,
             time: quizTime,
             shuffle: quizShuffle,
+            showAnswers: quizShowAnswers,
+            attempts: quizAttempts,
+            password: quizPassword,
+            oneAtTime: quizOneQuestionAtTime,
+            webcam: quizWebcam,
+            lockQuestions: quizLockQuestions,
 
             questions: quizQuestions,
 
@@ -91,6 +105,12 @@ export default function AssignmentEditor() {
             group: quizGroup,
             time: quizTime,
             shuffle: quizShuffle,
+            showAnswers: quizShowAnswers,
+            attempts: quizAttempts,
+            password: quizPassword,
+            oneAtTime: quizOneQuestionAtTime,
+            webcam: quizWebcam,
+            lockQuestions: quizLockQuestions,
 
             questions: quizQuestions
 
@@ -332,6 +352,52 @@ export default function AssignmentEditor() {
                             />
                             Shuffle Questions
                         </div>
+                        <div>
+                            <input
+                                type="checkbox"
+                                id="quizShuffleCheckbox"
+                                checked={quizShowAnswers}
+                                onChange={(event) => setQuizShowAnswers(event.target.checked)}
+                            />
+                            Show Answers
+                        </div>
+                        <div>
+                            <input
+                                type="checkbox"
+                                id="quizOneAtTimeCheckbox"
+                                checked={quizOneQuestionAtTime}
+                                onChange={(event) => setQuizOneQuestionAtTime(event.target.checked)}
+                            />
+                            One Question at a Time
+                        </div>
+                        <div>
+                            <input
+                                type="checkbox"
+                                id="quizWebcamCheckbox"
+                                checked={quizWebcam}
+                                onChange={(event) => setQuizWebcam(event.target.checked)}
+                            />
+                            Webcam Required
+                        </div>
+                        <div>
+                            <input
+                                type="checkbox"
+                                id="quizLockCheckbox"
+                                checked={quizLockQuestions}
+                                onChange={(event) => setQuizLockQuestions(event.target.checked)}
+                            />
+                            Lock Questions after Answer
+                        </div><br />
+
+                        Quiz Passcode
+                        <input id="wd-passcode" value={quizPassword} placeholder={"Quiz Passcode"}
+                            onChange={(e) => setQuizPassword(e.target.value)}
+                            className="form-control mb-2" /><br />
+
+                        Quiz Attempts
+                        <input id="wd-name" type="Number" value={quizAttempts} 
+                            onChange={(e) => setQuizAttempts(e.target.value)}
+                            className="form-control mb-2" /><br />
 
                         <div id="wd-display-grade-as">Display Grade as
                             <select className="form-control mb-2">

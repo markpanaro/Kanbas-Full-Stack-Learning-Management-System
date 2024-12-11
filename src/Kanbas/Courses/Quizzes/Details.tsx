@@ -2,8 +2,10 @@ import { useLocation, useParams } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import * as coursesClient from "../../Courses/client"
+import ProtectedAdminRoute from "../../Account/ProtectedAdminRoute"
 import { setQuizzes, deleteQuiz, addQuiz } from "../Quizzes/reducer";
 import * as gradesClient from "../Grades/client";
+import { FaPencil } from "react-icons/fa6";
 
 export default function Quizzes() {
     const { currentUser } = useSelector((state: any) => state.accountReducer);
@@ -42,7 +44,7 @@ export default function Quizzes() {
         const question = quiz.questions.find((question: any) => question._id === questionId);
         const isCorrect = question?.choices[index]?.isCorrect || false;
         const points = question?.points || 0;
-        
+
 
         const currentlyCorrect = answers[questionId]?.[1];
 
@@ -119,7 +121,11 @@ export default function Quizzes() {
 
     return (
         <div id="wd-quiz-details">
-            <h1>{quizName}</h1>
+            <h1>{quizName}
+                <FaPencil onClick={() =>
+                    window.location.href = `#/Kanbas/Courses/${quiz.course}/Quizzes/${quiz._id}`}
+                    className="text-primary me-3 px-2" />
+            </h1>
 
             {currentUser && currentUser.role === "FACULTY" && (
                 <div className="center-justify">
@@ -129,7 +135,15 @@ export default function Quizzes() {
                     <h5>Due {quizDue ? quizDue.split('T')[0] : 'N/A'}</h5>
                     <h5>Group {quiz.group}</h5>
                     <h5>Time {quiz.time}</h5>
-                    <h5>Shuffle {quiz.shuffle}</h5>
+                    <h5>Shuffle {String(quiz.shuffle)}</h5>
+                    <h5>Show Answers {String(quiz.showAnswers)}</h5>
+                    <h5>Quiz Attempts {quiz.attempts}</h5>
+                    <h5>Quiz Show Answers {String(quiz.showAnswers)}</h5>
+                    <h5>Quiz Passcode {quiz.password}</h5>
+                    <h5>Questions one at a Time {String(quiz.oneAtTime)}</h5>
+                    <h5>Webcam Required {String(quiz.webcam)}</h5>
+                    <h5>Quiz Lock Answers {String(quiz.lockQuestions)}</h5>
+
                 </div>
             )}<br />
 
