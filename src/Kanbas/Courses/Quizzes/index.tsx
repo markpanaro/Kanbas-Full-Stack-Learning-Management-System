@@ -24,6 +24,7 @@ export default function Quizzes() {
     const { quizzes } = useSelector((state: any) => state.quizzesReducer);
     let [deleteWindow, setDeleteWindow] = useState(false);
     let [deleteId, setDeleteId] = useState("");
+    const [menu, setMenu] = useState<string | null>(null);
 
     //let assignmentID = assignment.id;
 
@@ -43,6 +44,10 @@ export default function Quizzes() {
     const updatePublished = async (quiz: any) => {
         const newQuiz = { ...quiz, published: !quiz.published };
         await quizzesClient.saveQuiz(newQuiz)
+    }
+
+    const enableMenu = (quizId: string) => {
+        setMenu(menu === quizId ? null : quizId);
     }
 
     useEffect(() => {
@@ -148,7 +153,18 @@ export default function Quizzes() {
                                             <FaBan />
                                         </button>)}
 
-                                    <IoEllipsisVertical className="fs-4" />
+                                    <IoEllipsisVertical className="fs-4" onClick={() => enableMenu(quiz._id)} />
+
+                                    {menu === quiz._id && (
+                                <div className="quiz-context-menu">
+                                    <ul>
+                                        <li onClick={() => window.location.href = `#/Kanbas/Courses/${quiz.course}/Quizzes/${quiz._id}`}>Edit</li>
+                                        <li onClick={() => { setDeleteWindow(true); setDeleteId(quiz._id); }}>Delete</li>
+                                        <li onClick={() => updatePublished(quiz)}>{quiz.published ? 'Unpublish' : 'Publish'}</li>
+                                    </ul>
+                                </div>
+                            )}
+
                                 </div>
                                 {deleteWindow && quiz._id === deleteId && (
                                     <div className="confirmation-dialog">

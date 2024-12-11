@@ -20,7 +20,7 @@ export default function AssignmentEditor() {
     const [quizDue, setQuizDue] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.due);
     const [quizPoints, setQuizPoints] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.points);
     const [quizDesc, setQuizDesc] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.description);
-    const [quizPublished, setQuizPublished] = useState(false);
+    const [quizPublished, setQuizPublished] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.published || false);
     const [quizType, setQuizType] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.type || "GRADED_QUIZ");
     const [quizGroup, setQuizGroup] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.type || "ASSIGNMENTS");
     const [quizTime, setQuizTime] = useState((quizzes.find((quiz: any) => quiz._id === quizId))?.time || 20);
@@ -60,7 +60,7 @@ export default function AssignmentEditor() {
             due: quizDue,
             points: totalPoints,
             description: quizDesc,
-            published: false,
+            published: quizPublished,
             type: quizType,
             group: quizGroup,
             time: quizTime,
